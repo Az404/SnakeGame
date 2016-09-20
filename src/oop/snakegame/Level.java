@@ -36,13 +36,13 @@ public class Level {
         for (Bonus bonus:bonuses) {
             if (bonus.getLocation() == snake.getHeadLocation())
                 bonus.apply(this);
-            //bonuses.remove(bonus);
-            //break;
+            bonuses.remove(bonus);
+            break;
         }
     }
 
     private boolean isCollision(){
-        return field.isFree(snake.getHeadLocation()) && !snake.isHeadIntersected();
+        return !field.isFree(snake.getHeadLocation()) || snake.isHeadIntersected();
     }
 
 }
