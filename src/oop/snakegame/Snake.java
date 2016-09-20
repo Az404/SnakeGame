@@ -101,4 +101,14 @@ public class Snake {
     public Location getHeadLocation(){
         return head.location;
     }
+
+    public boolean isHeadIntersected(){
+        SnakeBlock currentBlock = head.previousBlock;
+        while (currentBlock != null){
+            if (currentBlock.location == head.location)
+                return true;
+            currentBlock = currentBlock.previousBlock;
+        }
+        return false;
+    }
 }

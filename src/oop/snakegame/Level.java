@@ -39,7 +39,7 @@ public class Level {
     }
 
     private boolean isCollision(){
-        return field.isFree(snake.getHeadLocation());
+        return field.isFree(snake.getHeadLocation()) && !snake.isHeadIntersected();
     }
 
 }
