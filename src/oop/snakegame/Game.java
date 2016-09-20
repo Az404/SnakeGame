@@ -15,7 +15,6 @@ public class Game {
     private GameState state = GameState.Proceed;
 
     public void tick() {
-        level.snake.move();
         try {
             level.handleTick();
         } catch (GameOverException e) {

@@ -25,8 +25,9 @@ public class Level {
     }
 
     public void handleTick() throws GameOverException {
-        if (isCollision()){
-            throw new GameOverException();
+        snake.move();
+       if (isCollision()){
+           throw new GameOverException();
         }
         handleBonuses();
     }
@@ -35,6 +36,8 @@ public class Level {
         for (Bonus bonus:bonuses) {
             if (bonus.getLocation() == snake.getHeadLocation())
                 bonus.apply(this);
+            //bonuses.remove(bonus);
+            //break;
         }
     }
 
