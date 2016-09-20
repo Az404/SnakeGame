@@ -1,5 +1,9 @@
 package oop.snakegame;
 
+enum GameState{
+    Proceed, Loss, Completed
+}
+
 public class Game {
 
     public Game() {
@@ -8,8 +12,28 @@ public class Game {
 
     private Level level;
 
-    public void tick(){
+    private GameState state = GameState.Proceed;
 
+    public void tick() {
+        level.snake.move();
+        try {
+            level.handleTick();
+        } catch (GameOverException e) {
+            state = GameState.Loss;
+        }
+    }
+
+    public GameState getState(){
+        return state;
+    }
+
+    public void setSnakeDirection(Direction direction) {
+        level.snake.setHeadDirection(direction);
+    }
+
+    public void loadLevel(Level level){
+        state = GameState.Proceed;
+        this.level = level;
     }
 
 }

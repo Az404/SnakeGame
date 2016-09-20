@@ -1,34 +1,42 @@
 package oop.snakegame;
 
-enum direction {
+enum Direction {
     Up,
     Right,
     Down,
     Left;
 
-    public direction oposite() {
-        if (this == direction.Down)
-            return direction.Up;
-        else if (this == direction.Left)
-            return direction.Right;
-        else if (this == direction.Right)
-            return direction.Left;
-        else return direction.Down;
+    public Direction opposite() {
+        switch (this){
+            case Down:
+                return Up;
+            case Left:
+                return Right;
+            case Right:
+                return Left;
+            default:
+                return Down;
+        }
     }
 
-    public  static Offset getOffset(direction directionOffset) {
-        if (directionOffset == direction.Down)
-            return new Offset(0, 1);
-        else if (directionOffset == direction.Left)
-            return new Offset(-1, 0);
-        else if (directionOffset == direction.Right)
-            return new Offset(1, 0);
-        else return new Offset(0, -1);
+    public Offset getOffset() {
+        switch (this){
+            case Down:
+                return new Offset(0, 1);
+            case Left:
+                return new Offset(-1, 0);
+            case Right:
+                return new Offset(1, 0);
+            default:
+                return new Offset(0, -1);
+        }
     }
 }
 
 public class Snake {
-    static class SnakeBlock {
+    private int extensionCount;
+
+    class SnakeBlock {
         private Location location;
         private SnakeBlock nextBlock = null;
         private SnakeBlock previousBlock = null;
@@ -42,31 +50,55 @@ public class Snake {
             this.previousBlock = previousBlock;
         }
     }
-    private direction directionHead;
+    private Direction headDirection;
     private SnakeBlock head;
     private SnakeBlock tail;
     private int length;
-    public Snake(Location location, direction directionHead) {
-        this.directionHead = directionHead;
+    public Snake(Location location, Direction headDirection) {
+        this.headDirection = headDirection;
         head = new SnakeBlock(location);
         tail = head;
         length = 1;
     }
-    public void increase(int increment) {
-        for (int i = 0; i < increment; i++)
-            increase();
+
+    public void extend(int increment) {
+        extensionCount += increment;
     }
-    public void increase() {
-        direction opositeDirection = directionHead.oposite();
-        Offset offsetTail = direction.getOffset(opositeDirection);
-        SnakeBlock newTail = new SnakeBlock(tail.location.addOffset(offsetTail));
-        tail.setPreviousBlock(newTail);
-        newTail.setNextBlock(tail);
-        tail = newTail;
+
+    public void move(){
+        appendHead();
+        if (extensionCount == 0){
+            reduceTail();
+        } else {
+            extensionCount--;
+        }
+    }
+
+    private void appendHead(){
+        SnakeBlock newHead = new SnakeBlock(head.location.addOffset(headDirection.getOffset()));
+        newHead.setPreviousBlock(head);
+        head.setNextBlock(newHead);
+        head = newHead;
         length++;
     }
-    public int getLenght() {
+
+    private void reduceTail(){
+        tail = tail.nextBlock;
+        tail.setPreviousBlock(null);
+        length--;
+    }
+
+    public int getLength() {
         return length;
     }
 
+    public void setHeadDirection(Direction direction){
+        if (direction == headDirection.opposite())
+            return;
+        headDirection = direction;
+    }
+
+    public Location getHeadLocation(){
+        return head.location;
+    }
 }

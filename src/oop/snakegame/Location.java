@@ -23,14 +23,10 @@ public class Location {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
+        if (obj == null || getClass() != obj.getClass())
             return false;
         Location other = (Location) obj;
-        if (x != other.x)
-            return false;
-        if (y != other.y)
+        if (x != other.x || y != other.y)
             return false;
         return true;
     }
