@@ -13,7 +13,7 @@ public class LevelTest {
             new char[] {'#', '#', '#', '#', '#', '#'},
             new char[] {'#', ' ', ' ', ' ', ' ', '#'},
             new char[] {'#', ' ', ' ', ' ', ' ', '#'},
-            new char[] {'#', ' ', ' ', ' ', ' ', '#'},
+            new char[] {'#', ' ', '#', ' ', ' ', '#'},
             new char[] {'#', ' ', ' ', ' ', ' ', '#'},
             new char[] {'#', '#', '#', '#', '#', '#'},
     };
@@ -26,5 +26,14 @@ public class LevelTest {
         Level level = new Level(field, snake, bonuses);
         level.handleTick();
         assertEquals(snake.getHeadLocation(), new Location(3, 2));
+    }
+
+    @Test(expected = GameOverException.class)
+    public void testWallCollision() throws Exception {
+        Field field = new Field(map);
+        Snake snake = new Snake(new Location(2, 2), Direction.Down);
+        List<Bonus> bonuses = new ArrayList<>();
+        Level level = new Level(field, snake, bonuses);
+        level.handleTick();
     }
 }

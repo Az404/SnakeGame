@@ -43,10 +43,10 @@ public class Snake {
         private SnakeBlock(Location location) {
             this.location = location;
         }
-        public void setNextBlock(SnakeBlock nextBlock) {
+        private void setNextBlock(SnakeBlock nextBlock) {
             this.nextBlock = nextBlock;
         }
-        public void setPreviousBlock(SnakeBlock previousBlock) {
+        private void setPreviousBlock(SnakeBlock previousBlock) {
             this.previousBlock = previousBlock;
         }
     }
@@ -105,7 +105,7 @@ public class Snake {
     public boolean isHeadIntersected(){
         SnakeBlock currentBlock = head.previousBlock;
         while (currentBlock != null){
-            if (currentBlock.location == head.location)
+            if (currentBlock.location.equals(head.location))
                 return true;
             currentBlock = currentBlock.previousBlock;
         }

@@ -20,10 +20,10 @@ public class Field {
     }
 
     public Field(char[][] cellMap){
-        this(cellMap.length, cellMap[0].length);
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                cells[i][j] = getCellType(cellMap[i][j]);
+        this(cellMap[0].length, cellMap.length);
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                cells[j][i] = getCellType(cellMap[i][j]);
             }
         }
     }

@@ -26,9 +26,8 @@ public class Level {
 
     public void handleTick() throws GameOverException {
         snake.move();
-       if (isCollision()){
+        if (isCollision())
            throw new GameOverException();
-        }
         handleBonuses();
     }
 
