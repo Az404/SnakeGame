@@ -2,38 +2,57 @@ package oop.snakegame;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
 
 import static org.junit.Assert.*;
 
 
 public class LevelTest {
-    private char[][] map = new char[][] {
-            new char[] {'#', '#', '#', '#', '#', '#'},
-            new char[] {'#', ' ', ' ', ' ', ' ', '#'},
-            new char[] {'#', ' ', ' ', ' ', ' ', '#'},
-            new char[] {'#', ' ', '#', ' ', ' ', '#'},
-            new char[] {'#', ' ', ' ', ' ', ' ', '#'},
-            new char[] {'#', '#', '#', '#', '#', '#'},
-    };
 
     @Test
     public void testSimpleStep() throws Exception {
-        Field field = new Field(map);
-        Snake snake = new Snake(new Location(2, 2), Direction.Right);
-        List<Bonus> bonuses = new ArrayList<>();
-        Level level = new Level(field, snake, bonuses);
+        String[] map = new String[]{
+            "####",
+            "#  #",
+            "#R #",
+            "####"
+        };
+
+        Level level = LevelCreator.create(map);
         level.handleTick();
-        assertEquals(snake.getHeadLocation(), new Location(3, 2));
+        assertEquals(new Location(2, 2), level.snake.getHeadLocation());
     }
 
     @Test(expected = GameOverException.class)
     public void testWallCollision() throws Exception {
-        Field field = new Field(map);
-        Snake snake = new Snake(new Location(2, 2), Direction.Down);
-        List<Bonus> bonuses = new ArrayList<>();
-        Level level = new Level(field, snake, bonuses);
+        String[] map = new String[]{
+            "#####",
+            "#   #",
+            "# D #",
+            "# # #",
+            "#####"
+        };
+        Level level = LevelCreator.create(map);
         level.handleTick();
+    }
+
+    @Test
+    public void testBonus() throws ParseException, GameOverException {
+        String[] map = new String[]{
+            "#####",
+            "#D  #",
+            "#1  #",
+            "#   #",
+            "#####"
+        };
+        Level level = LevelCreator.create(map);
+        level.handleTick();
+        assertEquals(new Location(1, 2), level.snake.getHeadLocation());
+        assertEquals(1, level.snake.getLength());
+        level.handleTick();
+        assertArrayEquals(new SnakeBlock[]{
+            new SnakeBlock(new Location(1, 3)),
+            new SnakeBlock(new Location(1, 2))
+        }, level.snake.toArray());
     }
 }

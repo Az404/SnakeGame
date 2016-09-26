@@ -10,16 +10,19 @@ public class SnakeTest {
         Snake snake = new Snake(new Location(0, 0), Direction.Right);
         snake.extend(1);
         snake.move();
-        assertEquals(snake.getHeadLocation(), new Location(1, 0));
-        assertEquals(snake.getLength(), 2);
+        assertArrayEquals(new SnakeBlock[]{
+                new SnakeBlock(new Location(1, 0)),
+                new SnakeBlock(new Location(0, 0))
+        }, snake.toArray());
     }
 
     @Test
     public void move() throws Exception {
         Snake snake = new Snake(new Location(0, 0), Direction.Down);
         snake.move();
-        assertEquals(snake.getHeadLocation(), new Location(0, 1));
-        assertEquals(snake.getLength(), 1);
+        assertArrayEquals(new SnakeBlock[]{
+                new SnakeBlock(new Location(0, 1))
+        }, snake.toArray());
     }
 
     @Test
@@ -27,14 +30,13 @@ public class SnakeTest {
         Snake snake = new Snake(new Location(0, 0), Direction.Down);
         snake.extend(6);
         Direction[] directions = new Direction[]{
-            Direction.Right, Direction.Up, Direction.Left
+            Direction.Down, Direction.Right, Direction.Up, Direction.Left
         };
         for (Direction direction : directions) {
-            snake.move();
-            assertFalse(snake.isHeadIntersected());
             snake.setHeadDirection(direction);
+            assertFalse(snake.isHeadIntersected());
+            snake.move();
         }
-        snake.move();
         assertTrue(snake.isHeadIntersected());
     }
 }

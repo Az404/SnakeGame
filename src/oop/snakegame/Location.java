@@ -1,15 +1,15 @@
 package oop.snakegame;
 
-public class Location {
+class Location {
     private int x;
     private int y;
-    public  Location(int x, int y) {
+    Location(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    public int getX() { return x;}
-    public int getY() { return y;}
-    public Location addOffset(Offset offset) {
+    int getX() { return x;}
+    int getY() { return y;}
+    Location addOffset(Offset offset) {
         return new Location(x + offset.getX(), y + offset.getY());
     }
 
@@ -21,13 +21,14 @@ public class Location {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
         if (obj == null || getClass() != obj.getClass())
             return false;
         Location other = (Location) obj;
-        if (x != other.x || y != other.y)
-            return false;
-        return true;
+        return !(x != other.x || y != other.y);
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Location(%1$d, %2$d)", x, y);
     }
 }

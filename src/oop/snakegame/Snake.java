@@ -1,5 +1,8 @@
 package oop.snakegame;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 enum Direction {
     Up,
     Right,
@@ -31,41 +34,39 @@ enum Direction {
                 return new Offset(0, -1);
         }
     }
+
+    public static Direction fromChar(char c){
+        switch (c){
+            case 'L':
+                return Direction.Left;
+            case 'R':
+                return Direction.Right;
+            case 'U':
+                return Direction.Up;
+            case 'D':
+                return Direction.Down;
+            default:
+                return null;
+        }
+    }
 }
 
-public class Snake {
+class Snake {
+    private Direction headDirection;
+    private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
 
-    class SnakeBlock {
-        private Location location;
-        private SnakeBlock nextBlock = null;
-        private SnakeBlock previousBlock = null;
-        private SnakeBlock(Location location) {
-            this.location = location;
-        }
-        private void setNextBlock(SnakeBlock nextBlock) {
-            this.nextBlock = nextBlock;
-        }
-        private void setPreviousBlock(SnakeBlock previousBlock) {
-            this.previousBlock = previousBlock;
-        }
-    }
-    private Direction headDirection;
-    private SnakeBlock head;
-    private SnakeBlock tail;
-    private int length;
-    public Snake(Location location, Direction headDirection) {
+    Snake(Location location, Direction headDirection) {
         this.headDirection = headDirection;
-        head = new SnakeBlock(location);
-        tail = head;
-        length = 1;
+        blocks = new LinkedList<>();
+        blocks.addFirst(new SnakeBlock(location));
     }
 
-    public void extend(int increment) {
+    void extend(int increment) {
         extensionCount += increment;
     }
 
-    public void move(){
+    void move(){
         appendHead();
         if (extensionCount == 0){
             reduceTail();
@@ -75,39 +76,41 @@ public class Snake {
     }
 
     private void appendHead(){
-        SnakeBlock newHead = new SnakeBlock(head.location.addOffset(headDirection.getOffset()));
-        newHead.setPreviousBlock(head);
-        head.setNextBlock(newHead);
-        head = newHead;
-        length++;
+        SnakeBlock newHead = new SnakeBlock(getHeadLocation().addOffset(headDirection.getOffset()));
+        blocks.addFirst(newHead);
     }
 
     private void reduceTail(){
-        tail = tail.nextBlock;
-        tail.setPreviousBlock(null);
-        length--;
+        blocks.removeLast();
     }
 
-    public int getLength() {
-        return length;
+    int getLength() {
+        return blocks.size();
     }
 
-    public void setHeadDirection(Direction direction){
-        if (direction == headDirection.opposite())
+    void setHeadDirection(Direction direction){
+        if (getLength() > 1 && direction == headDirection.opposite())
             return;
         headDirection = direction;
     }
 
-    public Location getHeadLocation(){
-        return head.location;
+    Iterator<SnakeBlock> iterator(){
+        return blocks.iterator();
     }
 
-    public boolean isHeadIntersected(){
-        SnakeBlock currentBlock = head.previousBlock;
-        while (currentBlock != null){
-            if (currentBlock.location.equals(head.location))
+    SnakeBlock[] toArray(){
+        return blocks.toArray(new SnakeBlock[0]);
+    }
+
+    Location getHeadLocation(){
+        return blocks.getFirst().getLocation();
+    }
+
+    boolean isHeadIntersected(){
+        SnakeBlock head = blocks.getFirst();
+        for (SnakeBlock block: blocks) {
+            if (block != head && block.getLocation().equals(head.getLocation()))
                 return true;
-            currentBlock = currentBlock.previousBlock;
         }
         return false;
     }

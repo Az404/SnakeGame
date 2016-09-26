@@ -1,15 +1,10 @@
 package oop.snakegame;
 
 
-public abstract class Bonus {
-    private Location location;
+abstract class Bonus extends Cell {
 
-    public Bonus(Location location) {
-        this.location = location;
-    }
-
-    public Location getLocation(){
-        return location;
+    Bonus(Location location) {
+        super(location);
     }
 
     public abstract void apply(Level level);

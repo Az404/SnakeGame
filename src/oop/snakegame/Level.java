@@ -1,30 +1,21 @@
 package oop.snakegame;
 
 import java.util.List;
-import java.util.Random;
 
-public class Level {
+class Level {
 
     private Field field;
     Snake snake;
 
     private List<Bonus> bonuses;
 
-//    public static Level createLevel(Random random){
-//         Field field = ...
-//         Snake snake = ...
-//         return Level(field, snake, ...)
-//    }
-//
-//    public static Level createLevel(String filename){}
-
-    public Level(Field field, Snake snake, List<Bonus> bonuses) {
+    Level(Field field, Snake snake, List<Bonus> bonuses) {
         this.field = field;
         this.snake = snake;
         this.bonuses = bonuses;
     }
 
-    public void handleTick() throws GameOverException {
+    void handleTick() throws GameOverException {
         snake.move();
         if (isCollision())
            throw new GameOverException();
@@ -33,10 +24,11 @@ public class Level {
 
     private void handleBonuses(){
         for (Bonus bonus:bonuses) {
-            if (bonus.getLocation() == snake.getHeadLocation())
+            if (bonus.getLocation().equals(snake.getHeadLocation())) {
                 bonus.apply(this);
-            bonuses.remove(bonus);
-            break;
+                bonuses.remove(bonus);
+                break;
+            }
         }
     }
 
