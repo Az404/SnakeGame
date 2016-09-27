@@ -51,7 +51,7 @@ enum Direction {
     }
 }
 
-class Snake {
+class Snake implements Iterable<SnakeBlock> {
     private Direction headDirection;
     private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
@@ -94,7 +94,7 @@ class Snake {
         headDirection = direction;
     }
 
-    Iterator<SnakeBlock> iterator(){
+    public Iterator<SnakeBlock> iterator(){
         return blocks.iterator();
     }
 

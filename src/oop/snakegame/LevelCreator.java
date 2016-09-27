@@ -1,5 +1,8 @@
 package oop.snakegame;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +15,9 @@ class LevelCreator {
 //         return Level(field, snake, ...)
 //    }
 
-//    public static Level create(String filename){}
+    static Level create(String filename) throws IOException, ParseException {
+        return create(Files.readAllLines(Paths.get(filename)).toArray(new String[0]));
+    }
 
     static Level create(String[] cellMap) throws ParseException {
         Field field = new Field(cellMap[0].length(), cellMap.length);

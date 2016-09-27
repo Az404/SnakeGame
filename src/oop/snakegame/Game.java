@@ -4,9 +4,9 @@ enum GameState{
     Proceed, Loss, Completed
 }
 
-public class Game {
+class Game {
 
-    public Game() {
+    Game() {
 
     }
 
@@ -14,7 +14,7 @@ public class Game {
 
     private GameState state = GameState.Proceed;
 
-    public void tick() {
+    void tick() {
         try {
             level.handleTick();
         } catch (GameOverException e) {
@@ -26,13 +26,17 @@ public class Game {
         return state;
     }
 
-    public void setSnakeDirection(Direction direction) {
-        level.snake.setHeadDirection(direction);
+    void setSnakeDirection(Direction direction) {
+        level.getSnake().setHeadDirection(direction);
     }
 
-    public void loadLevel(Level level){
+    void loadLevel(Level level){
         state = GameState.Proceed;
         this.level = level;
+    }
+
+    Level getLevel(){
+        return level;
     }
 
 }

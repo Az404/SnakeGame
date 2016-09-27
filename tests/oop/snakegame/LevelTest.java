@@ -20,7 +20,7 @@ public class LevelTest {
 
         Level level = LevelCreator.create(map);
         level.handleTick();
-        assertEquals(new Location(2, 2), level.snake.getHeadLocation());
+        assertEquals(new Location(2, 2), level.getSnake().getHeadLocation());
     }
 
     @Test(expected = GameOverException.class)
@@ -47,12 +47,12 @@ public class LevelTest {
         };
         Level level = LevelCreator.create(map);
         level.handleTick();
-        assertEquals(new Location(1, 2), level.snake.getHeadLocation());
-        assertEquals(1, level.snake.getLength());
+        assertEquals(new Location(1, 2), level.getSnake().getHeadLocation());
+        assertEquals(1, level.getSnake().getLength());
         level.handleTick();
         assertArrayEquals(new SnakeBlock[]{
             new SnakeBlock(new Location(1, 3)),
             new SnakeBlock(new Location(1, 2))
-        }, level.snake.toArray());
+        }, level.getSnake().toArray());
     }
 }

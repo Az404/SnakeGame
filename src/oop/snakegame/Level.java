@@ -5,7 +5,7 @@ import java.util.List;
 class Level {
 
     private Field field;
-    Snake snake;
+    private Snake snake;
 
     private List<Bonus> bonuses;
 
@@ -13,6 +13,14 @@ class Level {
         this.field = field;
         this.snake = snake;
         this.bonuses = bonuses;
+    }
+
+    Snake getSnake(){
+        return snake;
+    }
+
+    Field getField(){
+        return field;
     }
 
     void handleTick() throws GameOverException {
@@ -36,4 +44,7 @@ class Level {
         return !field.isFree(snake.getHeadLocation()) || snake.isHeadIntersected();
     }
 
+    List<Bonus> getBonuses() {
+        return bonuses;
+    }
 }

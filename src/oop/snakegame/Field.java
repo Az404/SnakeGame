@@ -20,16 +20,13 @@ class Field {
         cells = new CellType[width][height];
     }
 
-    public List<Location> GetCellsOfType(CellType type) {
-        List<Location> result = new ArrayList<>();
-        for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++)
-                result.add(new Location(i, j));
-        return result;
+
+    CellType getCell(Location location){
+        return getCell(location.getX(), location.getY());
     }
 
-    private CellType getCell(Location location){
-        return cells[location.getX()][location.getY()];
+    CellType getCell(int x, int y) {
+        return cells[x][y];
     }
 
     void setCell(Location location, CellType value){
