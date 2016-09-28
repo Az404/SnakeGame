@@ -22,7 +22,7 @@ class Game {
         }
     }
 
-    public GameState getState(){
+    GameState getState(){
         return state;
     }
 

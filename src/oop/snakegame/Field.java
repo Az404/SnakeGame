@@ -20,6 +20,14 @@ class Field {
         cells = new CellType[width][height];
     }
 
+    List<Location> getCellsOfType(CellType type) {
+        List<Location> result = new ArrayList<>();
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
+                if (cells[i][j] == type)
+                    result.add(new Location(i, j));
+        return result;
+    }
 
     CellType getCell(Location location){
         return getCell(location.getX(), location.getY());

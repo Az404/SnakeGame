@@ -1,13 +1,13 @@
 package oop.snakegame;
 
-public class Offset {
+class Offset {
     private int x;
     private int y;
-    public  Offset(int x, int y) {
+    Offset(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    public int getX() { return x;}
-    public int getY() { return y;}
+    int getX() { return x;}
+    int getY() { return y;}
 
 }

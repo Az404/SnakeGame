@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -17,8 +18,6 @@ import java.util.TimerTask;
 
 public class Main extends Application {
 
-    private Game game;
-    private GraphicsContext gc;
     private final static int tickTime = 500;
     private final static String levelFileName = "level.txt";
     private final static int cellSize = 15;
@@ -28,6 +27,10 @@ public class Main extends Application {
         put(KeyCode.UP, Direction.Up);
         put(KeyCode.DOWN, Direction.Down);
     }};
+
+    private Game game;
+    private GraphicsContext gc;
+    private Timer timer = new Timer();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -62,12 +65,13 @@ public class Main extends Application {
     }
 
     private void scheduleGameTimer(){
-        Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 game.tick();
                 Platform.runLater(() -> repaint());
+                if (game.getState() == GameState.Loss)
+                    timer.cancel();
             }
         }, 0, tickTime);
     }
@@ -75,6 +79,14 @@ public class Main extends Application {
     private void repaint(){
         Canvas canvas = gc.getCanvas();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        if (game.getState() == GameState.Loss){
+            gc.setFill(Color.RED);
+            gc.setFont(Font.font(40));
+            gc.fillText("Game Over", 0, canvas.getHeight() / 2);
+            return;
+        }
+
         Level level = game.getLevel();
 
         for (SnakeBlock block: level.getSnake()) {
@@ -94,7 +106,9 @@ public class Main extends Application {
     }
 
     private void fillCell(int x, int y, Paint p){
+        gc.setStroke(Color.BLACK);
         gc.setFill(p);
+        gc.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
         gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
 }
