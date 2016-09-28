@@ -55,6 +55,7 @@ class Snake implements Iterable<SnakeBlock> {
     private Direction headDirection;
     private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
+    private boolean directionFreeze = false;
 
     Snake(Location location, Direction headDirection) {
         this.headDirection = headDirection;
@@ -73,6 +74,7 @@ class Snake implements Iterable<SnakeBlock> {
         } else {
             extensionCount--;
         }
+        directionFreeze = false;
     }
 
     private void appendHead(){
@@ -89,9 +91,12 @@ class Snake implements Iterable<SnakeBlock> {
     }
 
     void setHeadDirection(Direction direction){
+        if (directionFreeze)
+            return;
         if (getLength() > 1 && direction == headDirection.opposite())
             return;
         headDirection = direction;
+        directionFreeze = true;
     }
 
     public Iterator<SnakeBlock> iterator(){
@@ -113,5 +118,9 @@ class Snake implements Iterable<SnakeBlock> {
                 return true;
         }
         return false;
+    }
+
+    Direction getHeadDirection() {
+        return headDirection;
     }
 }

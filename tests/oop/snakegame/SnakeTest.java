@@ -39,4 +39,21 @@ public class SnakeTest {
         }
         assertTrue(snake.isHeadIntersected());
     }
+
+    @Test
+    public void setHeadDirection() {
+        Snake snake = new Snake(new Location(1, 1), Direction.Up);
+        snake.setHeadDirection(Direction.Down);
+        assertEquals(Direction.Down, snake.getHeadDirection());
+        snake.extend(2);
+        for (int i = 0; i < 2; i++){
+            snake.move();
+        }
+        snake.setHeadDirection(Direction.Up);
+        assertEquals(Direction.Down, snake.getHeadDirection());
+        snake.move();
+        snake.setHeadDirection(Direction.Right);
+        snake.setHeadDirection(Direction.Up);
+        assertEquals(Direction.Right, snake.getHeadDirection());
+    }
 }
