@@ -78,9 +78,11 @@ class Snake implements Iterable<SnakeBlock> {
     }
 
     private void appendHead() {
-        SnakeBlock newHead = new SnakeBlock(getHead().location.addOffset(nextHeadDirection.getOffset()));
-        blocks.addFirst(newHead);
-        lastHeadDirection = nextHeadDirection;
+        synchronized (this) {
+            SnakeBlock newHead = new SnakeBlock(getHead().location.addOffset(nextHeadDirection.getOffset()));
+            blocks.addFirst(newHead);
+            lastHeadDirection = nextHeadDirection;
+        }
     }
 
     private void reduceTail() {
@@ -94,7 +96,9 @@ class Snake implements Iterable<SnakeBlock> {
     void setNextHeadDirection(Direction direction) {
         if (getLength() > 1 && direction == lastHeadDirection.opposite())
             return;
-        nextHeadDirection = direction;
+        synchronized (this){
+            nextHeadDirection = direction;
+        }
     }
 
     public Iterator<SnakeBlock> iterator() {
@@ -106,7 +110,9 @@ class Snake implements Iterable<SnakeBlock> {
     }
 
     Direction getNextHeadDirection() {
-        return nextHeadDirection;
+        synchronized (this) {
+            return nextHeadDirection;
+        }
     }
 
     SnakeBlock getHead() {
