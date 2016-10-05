@@ -1,21 +1,27 @@
 package oop.snakegame;
 
 abstract class Cell {
-    private Location location;
+    public final Location location;
 
     Cell(Location location) {
         this.location = location;
     }
 
-    Location getLocation() {
-        return location;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Cell cell = (Cell) o;
+
+        return location != null ? location.equals(cell.location) : cell.location == null;
+
     }
 
     @Override
-    public boolean equals(Object obj){
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        Cell other = (Cell)obj;
-        return location.equals(other.getLocation());
+    public int hashCode() {
+        return location != null ? location.hashCode() : 0;
     }
+
+    abstract void interact(Level level) throws GameException;
 }

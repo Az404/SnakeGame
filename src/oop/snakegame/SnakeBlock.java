@@ -1,11 +1,10 @@
 package oop.snakegame;
 
 
-class SnakeBlock extends Cell {
+class SnakeBlock extends SolidCell {
 
     SnakeBlock(Location location) {
         super(location);
     }
-
 
 }

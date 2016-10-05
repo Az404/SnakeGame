@@ -1,4 +1,4 @@
 package oop.snakegame;
 
-public class GameOverException extends Exception {
+public class GameOverException extends GameException {
 }

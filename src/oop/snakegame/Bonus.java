@@ -7,5 +7,8 @@ abstract class Bonus extends Cell {
         super(location);
     }
 
-    public abstract void apply(Level level);
+    @Override
+    void interact(Level level) throws GameException {
+        level.field.removeCell(this);
+    }
 }

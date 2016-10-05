@@ -1,76 +1,56 @@
 package oop.snakegame;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
-class Level {
+class Level implements Iterable<Cell> {
 
-    private Field field;
-    private Snake snake;
+    final Field field;
+    final Snake snake;
 
-    private List<Bonus> bonuses;
+    final Random random;
 
-    private Random random;
-
-    Level(Field field, Snake snake, List<Bonus> bonuses) {
+    Level(Field field, Snake snake) {
         this.field = field;
         this.snake = snake;
-        this.bonuses = bonuses;
         this.random = new Random();
     }
 
-    Snake getSnake(){
-        return snake;
-    }
-
-    Field getField(){
-        return field;
-    }
-
-    void handleTick() throws GameOverException {
+    void handleTick() throws GameException {
         snake.move();
-        if (isCollision())
-           throw new GameOverException();
-        handleBonuses();
+        if (!field.isCorrectLocation(snake.getHead().location))
+            throw new CollisionException();
+        for (Cell cell : getCells(snake.getHead().location))
+            if (cell != snake.getHead())
+                cell.interact(this);
     }
 
-    private void handleBonuses(){
-        for (Bonus bonus:bonuses) {
-            if (bonus.getLocation().equals(snake.getHeadLocation())) {
-                bonus.apply(this);
-                bonuses.remove(bonus);
-                generateBonus();
-                break;
-            }
-        }
+    private List<Cell> getCells(Location location) {
+        return stream().filter(cell -> cell.location.equals(location)).collect(Collectors.toList());
     }
 
-    private void generateBonus(){
-        List<Location> freeCells = findFreeCells();
-        int index = random.nextInt(freeCells.size());
-        int increment = random.nextInt(4) + 1;
-        bonuses.add(new SizeBonus(freeCells.get(index), increment));
-    }
-
-    private List<Location> findFreeCells(){
+    List<Location> getFreeLocations() {
         HashSet<Location> result = new HashSet<>();
-        result.addAll(field.getCellsOfType(CellType.Empty));
-        for (SnakeBlock block: snake){
-            result.remove(block.getLocation());
-        }
-        for (Bonus bonus: bonuses){
-            result.remove(bonus.getLocation());
+        for (int x = 0; x < field.width; x++)
+            for (int y = 0; y < field.height; y++)
+                result.add(new Location(x, y));
+        for (Cell cell : this) {
+            result.remove(cell.location);
         }
         return new ArrayList<>(result);
     }
 
-    private boolean isCollision(){
-        return !field.isFree(snake.getHeadLocation()) || snake.isHeadIntersected();
+    Stream<Cell> stream(){
+        return Stream.concat(
+                StreamSupport.stream(field.spliterator(), false),
+                StreamSupport.stream(snake.spliterator(), false)
+        );
     }
 
-    List<Bonus> getBonuses() {
-        return bonuses;
+    @Override
+    public Iterator<Cell> iterator() {
+        return stream().collect(Collectors.toList()).iterator();
     }
 }

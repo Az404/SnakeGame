@@ -1,30 +1,32 @@
 package oop.snakegame;
 
 class Location {
-    private int x;
-    private int y;
+    final int x;
+    final int y;
     Location(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    int getX() { return x;}
-    int getY() { return y;}
     Location addOffset(Offset offset) {
-        return new Location(x + offset.getX(), y + offset.getY());
+        return new Location(x + offset.x, y + offset.y);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Location location = (Location) o;
+
+        return x == location.x && y == location.y;
+
+    }
 
     @Override
     public int hashCode() {
-        return  (x * 167) ^ y;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        Location other = (Location) obj;
-        return !(x != other.x || y != other.y);
+        int result = x;
+        result = 31 * result + y;
+        return result;
     }
 
     @Override

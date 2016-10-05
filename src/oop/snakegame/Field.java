@@ -1,61 +1,39 @@
 package oop.snakegame;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-enum CellType {
-    Wall,
-    Empty
-}
+class Field implements Iterable<Cell> {
 
-class Field {
-
-    private CellType[][] cells;
-    private int width;
-    private int height;
+    private List<Cell> cells;
+    final int width;
+    final int height;
 
     Field(int width, int height) {
         this.width = width;
         this.height = height;
-        cells = new CellType[width][height];
+        cells = new ArrayList<>();
     }
 
-    List<Location> getCellsOfType(CellType type) {
-        List<Location> result = new ArrayList<>();
-        for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++)
-                if (cells[i][j] == type)
-                    result.add(new Location(i, j));
-        return result;
+    public Iterator<Cell> iterator() {
+        return cells.iterator();
     }
 
-    CellType getCell(Location location){
-        return getCell(location.getX(), location.getY());
+    void addCell(Cell cell) {
+        if (isCorrectLocation(cell.location))
+            cells.add(cell);
+        else
+            throw new InvalidParameterException("location is not on the field");
     }
 
-    CellType getCell(int x, int y) {
-        return cells[x][y];
+    void removeCell(Cell cell) {
+        cells.remove(cell);
     }
 
-    void setCell(Location location, CellType value){
-        cells[location.getX()][location.getY()] = value;
-    }
-
-    private boolean contains(Location location) {
-        return (location.getX() >= 0 && location.getX() < width &&
-                location.getY() >= 0 && location.getY() < height);
-
-    }
-
-    boolean isFree(Location location){
-        return contains(location) && getCell(location) == CellType.Empty;
-    }
-
-    int getWidth(){
-        return width;
-    }
-
-    int getHeight(){
-        return height;
+    boolean isCorrectLocation(Location location) {
+        return (location.x >= 0 && location.x < width &&
+                location.y >= 0 && location.y < height);
     }
 }

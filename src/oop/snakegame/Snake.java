@@ -2,6 +2,7 @@ package oop.snakegame;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Objects;
 
 enum Direction {
     Up,
@@ -10,7 +11,7 @@ enum Direction {
     Left;
 
     public Direction opposite() {
-        switch (this){
+        switch (this) {
             case Down:
                 return Up;
             case Left:
@@ -23,7 +24,7 @@ enum Direction {
     }
 
     public Offset getOffset() {
-        switch (this){
+        switch (this) {
             case Down:
                 return new Offset(0, 1);
             case Left:
@@ -35,8 +36,8 @@ enum Direction {
         }
     }
 
-    public static Direction fromChar(char c){
-        switch (c){
+    public static Direction fromChar(char c) {
+        switch (c) {
             case 'L':
                 return Direction.Left;
             case 'R':
@@ -52,13 +53,13 @@ enum Direction {
 }
 
 class Snake implements Iterable<SnakeBlock> {
-    private Direction headDirection;
+    private Direction lastHeadDirection;
+    private Direction nextHeadDirection;
     private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
-    private boolean directionFreeze = false;
 
     Snake(Location location, Direction headDirection) {
-        this.headDirection = headDirection;
+        this.nextHeadDirection = headDirection;
         blocks = new LinkedList<>();
         blocks.addFirst(new SnakeBlock(location));
     }
@@ -67,22 +68,22 @@ class Snake implements Iterable<SnakeBlock> {
         extensionCount += increment;
     }
 
-    void move(){
+    void move() {
         appendHead();
-        if (extensionCount == 0){
+        if (extensionCount == 0) {
             reduceTail();
         } else {
             extensionCount--;
         }
-        directionFreeze = false;
     }
 
-    private void appendHead(){
-        SnakeBlock newHead = new SnakeBlock(getHeadLocation().addOffset(headDirection.getOffset()));
+    private void appendHead() {
+        SnakeBlock newHead = new SnakeBlock(getHead().location.addOffset(nextHeadDirection.getOffset()));
         blocks.addFirst(newHead);
+        lastHeadDirection = nextHeadDirection;
     }
 
-    private void reduceTail(){
+    private void reduceTail() {
         blocks.removeLast();
     }
 
@@ -90,37 +91,25 @@ class Snake implements Iterable<SnakeBlock> {
         return blocks.size();
     }
 
-    void setHeadDirection(Direction direction){
-        if (directionFreeze)
+    void setNextHeadDirection(Direction direction) {
+        if (getLength() > 1 && direction == lastHeadDirection.opposite())
             return;
-        if (getLength() > 1 && direction == headDirection.opposite())
-            return;
-        headDirection = direction;
-        directionFreeze = true;
+        nextHeadDirection = direction;
     }
 
-    public Iterator<SnakeBlock> iterator(){
+    public Iterator<SnakeBlock> iterator() {
         return blocks.iterator();
     }
 
-    SnakeBlock[] toArray(){
+    SnakeBlock[] toArray() {
         return blocks.toArray(new SnakeBlock[0]);
     }
 
-    Location getHeadLocation(){
-        return blocks.getFirst().getLocation();
+    Direction getNextHeadDirection() {
+        return nextHeadDirection;
     }
 
-    boolean isHeadIntersected(){
-        SnakeBlock head = blocks.getFirst();
-        for (SnakeBlock block: blocks) {
-            if (block != head && block.getLocation().equals(head.getLocation()))
-                return true;
-        }
-        return false;
-    }
-
-    Direction getHeadDirection() {
-        return headDirection;
+    SnakeBlock getHead() {
+        return blocks.getFirst();
     }
 }

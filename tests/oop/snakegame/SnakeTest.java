@@ -26,34 +26,19 @@ public class SnakeTest {
     }
 
     @Test
-    public void isHeadIntersected() throws Exception {
-        Snake snake = new Snake(new Location(0, 0), Direction.Down);
-        snake.extend(6);
-        Direction[] directions = new Direction[]{
-            Direction.Down, Direction.Right, Direction.Up, Direction.Left
-        };
-        for (Direction direction : directions) {
-            snake.setHeadDirection(direction);
-            assertFalse(snake.isHeadIntersected());
-            snake.move();
-        }
-        assertTrue(snake.isHeadIntersected());
-    }
-
-    @Test
     public void setHeadDirection() {
         Snake snake = new Snake(new Location(1, 1), Direction.Up);
-        snake.setHeadDirection(Direction.Down);
-        assertEquals(Direction.Down, snake.getHeadDirection());
+        snake.setNextHeadDirection(Direction.Down);
+        assertEquals(Direction.Down, snake.getNextHeadDirection());
         snake.extend(2);
         for (int i = 0; i < 2; i++){
             snake.move();
         }
-        snake.setHeadDirection(Direction.Up);
-        assertEquals(Direction.Down, snake.getHeadDirection());
+        snake.setNextHeadDirection(Direction.Up);
+        assertEquals(Direction.Down, snake.getNextHeadDirection());
         snake.move();
-        snake.setHeadDirection(Direction.Right);
-        snake.setHeadDirection(Direction.Up);
-        assertEquals(Direction.Right, snake.getHeadDirection());
+        snake.setNextHeadDirection(Direction.Right);
+        snake.setNextHeadDirection(Direction.Up);
+        assertEquals(Direction.Right, snake.getNextHeadDirection());
     }
 }

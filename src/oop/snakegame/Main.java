@@ -27,6 +27,11 @@ public class Main extends Application {
         put(KeyCode.UP, Direction.Up);
         put(KeyCode.DOWN, Direction.Down);
     }};
+    private final static HashMap<String, Color> cellColors = new HashMap<String, Color>(){{
+        put(Wall.class.getName(), Color.GRAY);
+        put(SnakeBlock.class.getName(), Color.BLUE);
+        put(SizeBonus.class.getName(), Color.GREEN);
+    }};
 
     private Game game;
     private GraphicsContext gc;
@@ -37,8 +42,8 @@ public class Main extends Application {
         game = new Game();
         game.loadLevel(LevelCreator.create(levelFileName));
 
-        Field field = game.getLevel().getField();
-        setUpStage(primaryStage, field.getWidth()*cellSize, field.getHeight() * cellSize);
+        Field field = game.getLevel().field;
+        setUpStage(primaryStage, field.width*cellSize, field.height * cellSize);
 
         scheduleGameTimer();
     }
@@ -87,21 +92,8 @@ public class Main extends Application {
             return;
         }
 
-        Level level = game.getLevel();
-
-        for (SnakeBlock block: level.getSnake()) {
-            fillCell(block.getLocation().getX(), block.getLocation().getY(), Color.BLUE);
-        }
-
-        Field field = level.getField();
-        for (int x = 0; x < field.getWidth(); x++)
-            for(int y = 0; y < field.getHeight(); y++){
-                if (field.getCell(x, y) == CellType.Wall)
-                    fillCell(x, y, Color.GRAY);
-            }
-
-        for(Bonus bonus: level.getBonuses()){
-            fillCell(bonus.getLocation().getX(), bonus.getLocation().getY(), Color.GREEN);
+        for (Cell cell: game.getLevel()) {
+            fillCell(cell.location.x, cell.location.y, cellColors.get(cell.getClass().getName()));
         }
     }
 

@@ -2,15 +2,13 @@ package oop.snakegame;
 
 import org.junit.Test;
 
-import java.text.ParseException;
-
 import static org.junit.Assert.*;
 
 
 public class LevelTest {
 
     @Test
-    public void testSimpleStep() throws Exception {
+    public void testSimpleStep() throws Throwable {
         String[] map = new String[]{
             "####",
             "#  #",
@@ -20,11 +18,11 @@ public class LevelTest {
 
         Level level = LevelCreator.create(map);
         level.handleTick();
-        assertEquals(new Location(2, 2), level.getSnake().getHeadLocation());
+        assertEquals(new Location(2, 2), level.snake.getHead().location);
     }
 
-    @Test(expected = GameOverException.class)
-    public void testWallCollision() throws Exception {
+    @Test(expected = CollisionException.class)
+    public void testWallCollision() throws Throwable {
         String[] map = new String[]{
             "#####",
             "#   #",
@@ -36,8 +34,36 @@ public class LevelTest {
         level.handleTick();
     }
 
+    @Test(expected = CollisionException.class)
+    public void testSelfCollision() throws Throwable {
+        String[] map = new String[]{
+                "#####",
+                "#  D#",
+                "#  4#",
+                "#   #",
+                "#####"
+        };
+        Level level = LevelCreator.create(map);
+        Direction[] directions = new Direction[]{
+            Direction.Down, Direction.Down, Direction.Left, Direction.Up, Direction.Right
+        };
+        for (Direction direction : directions) {
+            level.snake.setNextHeadDirection(direction);
+            level.handleTick();
+        }
+    }
+
+    @Test(expected = CollisionException.class)
+    public void testMapExit() throws Throwable {
+        String[] map = new String[]{
+                " R"
+        };
+        Level level = LevelCreator.create(map);
+        level.handleTick();
+    }
+
     @Test
-    public void testBonus() throws ParseException, GameOverException {
+    public void testBonus() throws Throwable {
         String[] map = new String[]{
             "#####",
             "#D  #",
@@ -47,12 +73,12 @@ public class LevelTest {
         };
         Level level = LevelCreator.create(map);
         level.handleTick();
-        assertEquals(new Location(1, 2), level.getSnake().getHeadLocation());
-        assertEquals(1, level.getSnake().getLength());
+        assertEquals(new Location(1, 2), level.snake.getHead().location);
+        assertEquals(1, level.snake.getLength());
         level.handleTick();
         assertArrayEquals(new SnakeBlock[]{
             new SnakeBlock(new Location(1, 3)),
             new SnakeBlock(new Location(1, 2))
-        }, level.getSnake().toArray());
+        }, level.snake.toArray());
     }
 }
