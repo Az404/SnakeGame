@@ -17,11 +17,13 @@ class Game {
     void tick() {
         try {
             level.handleTick();
-        } catch (CollisionException e) {
-            state = GameState.Loss;
+        //} catch (CollisionException e) {
+        //    state = GameState.Loss;
         } catch (GameException e){
             e.printStackTrace();
         }
+        if (level.snake.isDead())
+            state = GameState.Loss;
     }
 
     GameState getState(){

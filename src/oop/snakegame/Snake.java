@@ -57,11 +57,20 @@ class Snake implements Iterable<SnakeBlock> {
     private Direction nextHeadDirection;
     private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
-
+    private boolean death;
     Snake(Location location, Direction headDirection) {
         this.nextHeadDirection = headDirection;
         blocks = new LinkedList<>();
         blocks.addFirst(new SnakeBlock(location));
+        death = false;
+    }
+
+    void destroy() {
+        death = true;
+    }
+
+    boolean isDead()  {
+        return death;
     }
 
     void extend(int increment) {

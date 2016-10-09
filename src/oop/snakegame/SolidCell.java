@@ -7,6 +7,7 @@ class SolidCell extends Cell {
 
     @Override
     void interact(Level level) throws CollisionException {
-        throw new CollisionException();
+        level.snake.destroy();
+        //throw new CollisionException();
     }
 }

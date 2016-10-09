@@ -20,8 +20,11 @@ class Level implements Iterable<Cell> {
 
     void handleTick() throws GameException {
         snake.move();
-        if (!field.isCorrectLocation(snake.getHead().location))
-            throw new CollisionException();
+        if (!field.isCorrectLocation(snake.getHead().location)) {
+            //throw new CollisionException();
+            snake.destroy();
+        }
+
         for (Cell cell : getCells(snake.getHead().location))
             if (cell != snake.getHead())
                 cell.interact(this);
