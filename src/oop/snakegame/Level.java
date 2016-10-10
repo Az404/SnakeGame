@@ -11,7 +11,7 @@ class Level implements Iterable<Cell> {
 
     final Random random;
 
-    Level(Field field, Snake... snakes) {
+    Level(Field field, Snake[] snakes) {
         this.field = field;
         this.snakes = snakes;
         this.random = new Random();

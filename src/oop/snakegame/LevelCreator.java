@@ -1,6 +1,7 @@
 package oop.snakegame;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -21,7 +22,7 @@ class LevelCreator {
 
     static Level create(String[] cellMap) throws ParseException {
         Field field = new Field(cellMap[0].length(), cellMap.length);
-        Snake snake = null;
+        List<Snake> snakes = new ArrayList<>();
 
         for (int y = 0; y < field.height; y++) {
 
@@ -33,16 +34,20 @@ class LevelCreator {
                 Location location = new Location(x, y);
 
                 Cell cell = createCell(location, currentCell);
-                if (cell != null)
+                if (cell != null) {
                     field.addCell(cell);
+                    continue;
+                }
 
-                if (snake == null)
-                    snake = createSnake(location, currentCell);
+                Snake snake = createSnake(location, currentCell, snakes.size());
+                if (snake != null)
+                    snakes.add(snake);
             }
         }
-        if (snake == null)
+        if (snakes.isEmpty())
             throw new ParseException("no snakes on map", field.height * field.width);
-        return new Level(field, snake);
+
+        return new Level(field, snakes.toArray(new Snake[snakes.size()]));
     }
 
     private static Cell createCell(Location location, char c) {
@@ -54,12 +59,12 @@ class LevelCreator {
             return null;
     }
 
-    private static Snake createSnake(Location location, char c) {
+    private static Snake createSnake(Location location, char c, int number) {
         Direction direction = Direction.fromChar(c);
         if (direction == null)
             return null;
         else
-            return new Snake(location, direction);
+            return new Snake(location, direction, number);
     }
 
 }

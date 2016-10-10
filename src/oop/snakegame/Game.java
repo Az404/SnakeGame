@@ -21,17 +21,19 @@ class Game {
             e.printStackTrace();
         }
         // FIXME
-        if (level.snakes[0].isDead())
-            state = GameState.Loss;
+        for (Snake snake : level.snakes)
+            if (snake.isDead())
+                state = GameState.Loss;
     }
 
     GameState getState(){
         return state;
     }
 
-    void setSnakeDirection(Direction direction) {
+    void setSnakeDirection( int numberSnake, Direction direction) {
         // FIXME
-        level.snakes[0].setNextHeadDirection(direction);
+        if (numberSnake < level.snakes.length)
+            level.snakes[numberSnake].setNextHeadDirection(direction);
     }
 
     void loadLevel(Level level){

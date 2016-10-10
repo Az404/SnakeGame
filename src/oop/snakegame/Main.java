@@ -6,11 +6,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -21,12 +23,17 @@ public class Main extends Application {
     private final static int tickTime = 500;
     private final static String levelFileName = "level.txt";
     private final static int cellSize = 15;
-    private final static HashMap<KeyCode, Direction> keyMap = new HashMap<KeyCode, Direction>(){{
-        put(KeyCode.LEFT, Direction.Left);
-        put(KeyCode.RIGHT, Direction.Right);
-        put(KeyCode.UP, Direction.Up);
-        put(KeyCode.DOWN, Direction.Down);
+    private final static HashMap<KeyCode, Pair<Integer, Direction>> keyMap = new HashMap<KeyCode, Pair<Integer, Direction>>(){{
+        put(KeyCode.LEFT, new Pair<Integer, Direction>(0, Direction.Left));
+        put(KeyCode.RIGHT, new Pair<Integer, Direction>(0, Direction.Right));
+        put(KeyCode.UP, new Pair<Integer, Direction>(0, Direction.Up));
+        put(KeyCode.DOWN, new Pair<Integer, Direction>(0, Direction.Down));
+        put(KeyCode.A, new Pair<Integer, Direction>(1, Direction.Left));
+        put(KeyCode.D, new Pair<Integer, Direction>(1, Direction.Right));
+        put(KeyCode.W, new Pair<Integer, Direction>(1, Direction.Up));
+        put(KeyCode.S, new Pair<Integer, Direction>(1, Direction.Down));
     }};
+
     private final static HashMap<String, Color> cellColors = new HashMap<String, Color>(){{
         put(Wall.class.getName(), Color.GRAY);
         put(SnakeBlock.class.getName(), Color.BLUE);
@@ -41,10 +48,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         game = new Game();
         game.loadLevel(LevelCreator.create(levelFileName));
-
         Field field = game.getLevel().field;
         setUpStage(primaryStage, field.width*cellSize, field.height * cellSize);
-
         scheduleGameTimer();
     }
 
@@ -56,7 +61,8 @@ public class Main extends Application {
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(event -> {
             if (keyMap.containsKey(event.getCode())){
-                game.setSnakeDirection(keyMap.get(event.getCode()));
+                Pair<Integer, Direction> pair = keyMap.get(event.getCode());
+                game.setSnakeDirection(pair.getKey(),  pair.getValue());
             }
         });
         primaryStage.setTitle("Змейка");
