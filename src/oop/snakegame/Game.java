@@ -17,12 +17,11 @@ class Game {
     void tick() {
         try {
             level.handleTick();
-        //} catch (CollisionException e) {
-        //    state = GameState.Loss;
         } catch (GameException e){
             e.printStackTrace();
         }
-        if (level.snake.isDead())
+        // FIXME
+        if (level.snakes[0].isDead())
             state = GameState.Loss;
     }
 
@@ -31,7 +30,8 @@ class Game {
     }
 
     void setSnakeDirection(Direction direction) {
-        level.snake.setNextHeadDirection(direction);
+        // FIXME
+        level.snakes[0].setNextHeadDirection(direction);
     }
 
     void loadLevel(Level level){

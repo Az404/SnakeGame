@@ -1,9 +1,7 @@
 package oop.snakegame;
 
 import org.junit.Test;
-
 import static org.junit.Assert.*;
-
 
 public class LevelTest {
 
@@ -18,7 +16,7 @@ public class LevelTest {
 
         Level level = LevelCreator.create(map);
         level.handleTick();
-        assertEquals(new Location(2, 2), level.snake.getHead().location);
+        assertEquals(new Location(2, 2), level.snakes[0].getHead().location);
     }
 
     @Test(expected = CollisionException.class)
@@ -48,7 +46,7 @@ public class LevelTest {
             Direction.Down, Direction.Down, Direction.Left, Direction.Up, Direction.Right
         };
         for (Direction direction : directions) {
-            level.snake.setNextHeadDirection(direction);
+            level.snakes[0].setNextHeadDirection(direction);
             level.handleTick();
         }
     }
@@ -73,12 +71,12 @@ public class LevelTest {
         };
         Level level = LevelCreator.create(map);
         level.handleTick();
-        assertEquals(new Location(1, 2), level.snake.getHead().location);
-        assertEquals(1, level.snake.getLength());
+        assertEquals(new Location(1, 2), level.snakes[0].getHead().location);
+        assertEquals(1, level.snakes[0].getLength());
         level.handleTick();
         assertArrayEquals(new SnakeBlock[]{
             new SnakeBlock(new Location(1, 3)),
             new SnakeBlock(new Location(1, 2))
-        }, level.snake.toArray());
+        }, level.snakes[0].toArray());
     }
 }

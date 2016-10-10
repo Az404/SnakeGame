@@ -12,9 +12,9 @@ class SizeBonus extends Bonus {
     }
 
     @Override
-    void interact(Level level) throws GameException {
-        super.interact(level);
-        level.snake.extend(sizeIncrement);
+    void interactWithSnake(Snake snake, Level level) throws GameException {
+        super.interactWithSnake(snake, level);
+        snake.extend(sizeIncrement);
         regenerate(level);
     }
 

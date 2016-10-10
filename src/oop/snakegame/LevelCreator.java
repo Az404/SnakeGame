@@ -11,8 +11,8 @@ class LevelCreator {
 
 //    public static Level create(int width, int height, Random random){
 //         Field field = ...
-//         Snake snake = ...
-//         return Level(field, snake, ...)
+//         Snake snakes = ...
+//         return Level(field, snakes, ...)
 //    }
 
     static Level create(String filename) throws IOException, ParseException {
@@ -41,7 +41,7 @@ class LevelCreator {
             }
         }
         if (snake == null)
-            throw new ParseException("no snake on map", field.height * field.width);
+            throw new ParseException("no snakes on map", field.height * field.width);
         return new Level(field, snake);
     }
 

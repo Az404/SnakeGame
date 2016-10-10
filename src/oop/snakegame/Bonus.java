@@ -8,7 +8,7 @@ abstract class Bonus extends Cell {
     }
 
     @Override
-    void interact(Level level) throws GameException {
+    void interactWithSnake(Snake snake, Level level) throws GameException {
         level.field.removeCell(this);
     }
 }

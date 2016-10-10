@@ -3,6 +3,7 @@ package oop.snakegame;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 enum Direction {
     Up,
@@ -116,6 +117,10 @@ class Snake implements Iterable<SnakeBlock> {
 
     SnakeBlock[] toArray() {
         return blocks.toArray(new SnakeBlock[0]);
+    }
+
+    Stream<SnakeBlock> stream(){
+        return blocks.stream();
     }
 
     Direction getNextHeadDirection() {

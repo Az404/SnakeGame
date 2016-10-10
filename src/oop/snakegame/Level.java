@@ -3,31 +3,31 @@ package oop.snakegame;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 class Level implements Iterable<Cell> {
 
     final Field field;
-    final Snake snake;
+    final Snake[] snakes;
 
     final Random random;
 
-    Level(Field field, Snake snake) {
+    Level(Field field, Snake... snakes) {
         this.field = field;
-        this.snake = snake;
+        this.snakes = snakes;
         this.random = new Random();
     }
 
     void handleTick() throws GameException {
-        snake.move();
-        if (!field.isCorrectLocation(snake.getHead().location)) {
-            //throw new CollisionException();
-            snake.destroy();
+        for (Snake snake : snakes) {
+            snake.move();
+            if (!field.isCorrectLocation(snake.getHead().location)) {
+                snake.destroy();
+            }
         }
-
-        for (Cell cell : getCells(snake.getHead().location))
-            if (cell != snake.getHead())
-                cell.interact(this);
+        for (Snake snake: snakes)
+            for (Cell cell : getCells(snake.getHead().location))
+                if (cell != snake.getHead())
+                    cell.interactWithSnake(snake, this);
     }
 
     private List<Cell> getCells(Location location) {
@@ -47,9 +47,9 @@ class Level implements Iterable<Cell> {
 
     Stream<Cell> stream(){
         return Stream.concat(
-                StreamSupport.stream(field.spliterator(), false),
-                StreamSupport.stream(snake.spliterator(), false)
-        );
+                Stream.of(field.stream()),
+                Arrays.stream(snakes).map(Snake::stream)
+        ).reduce(Stream::concat).orElseGet(Stream::empty).map(cell -> (Cell)cell);
     }
 
     @Override

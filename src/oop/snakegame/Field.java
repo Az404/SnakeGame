@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 class Field implements Iterable<Cell> {
 
@@ -19,6 +20,10 @@ class Field implements Iterable<Cell> {
 
     public Iterator<Cell> iterator() {
         return cells.iterator();
+    }
+
+    Stream<Cell> stream(){
+        return cells.stream();
     }
 
     void addCell(Cell cell) {
