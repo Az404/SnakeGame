@@ -6,13 +6,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -23,47 +21,64 @@ public class Main extends Application {
     private final static int tickTime = 500;
     private final static String levelFileName = "level.txt";
     private final static int cellSize = 15;
-    private final static HashMap<KeyCode, Pair<Integer, Direction>> keyMap = new HashMap<KeyCode, Pair<Integer, Direction>>(){{
-        put(KeyCode.LEFT, new Pair<Integer, Direction>(0, Direction.Left));
-        put(KeyCode.RIGHT, new Pair<Integer, Direction>(0, Direction.Right));
-        put(KeyCode.UP, new Pair<Integer, Direction>(0, Direction.Up));
-        put(KeyCode.DOWN, new Pair<Integer, Direction>(0, Direction.Down));
-        put(KeyCode.A, new Pair<Integer, Direction>(1, Direction.Left));
-        put(KeyCode.D, new Pair<Integer, Direction>(1, Direction.Right));
-        put(KeyCode.W, new Pair<Integer, Direction>(1, Direction.Up));
-        put(KeyCode.S, new Pair<Integer, Direction>(1, Direction.Down));
-    }};
+    private final static HashMap<KeyCode, Direction> arrowsKeyMap = new HashMap<KeyCode, Direction>() {
+        {
+            put(KeyCode.LEFT, Direction.Left);
+            put(KeyCode.RIGHT, Direction.Right);
+            put(KeyCode.UP, Direction.Up);
+            put(KeyCode.DOWN, Direction.Down);
+        }
+    };
 
-    private final static HashMap<String, Color> cellColors = new HashMap<String, Color>(){{
+    private final static HashMap<KeyCode, Direction> adwsKeyMap = new HashMap<KeyCode, Direction>() {
+        {
+            put(KeyCode.A, Direction.Left);
+            put(KeyCode.D, Direction.Right);
+            put(KeyCode.W, Direction.Up);
+            put(KeyCode.S, Direction.Down);
+        }
+    };
+
+    private final static HashMap<String, Color> cellColors = new HashMap<String, Color>() {{
         put(Wall.class.getName(), Color.GRAY);
         put(SnakeBlock.class.getName(), Color.BLUE);
         put(SizeBonus.class.getName(), Color.GREEN);
     }};
 
+    private final static int playersCount = 2;
+
     private Game game;
     private GraphicsContext gc;
     private Timer timer = new Timer();
+    private KeyboardPlayerController[] controllers;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        game = new Game();
+    public void start(Stage primaryStage) throws Exception {
+        game = new Game(playersCount);
+        initControllers();
         game.loadLevel(LevelCreator.create(levelFileName));
         Field field = game.getLevel().field;
-        setUpStage(primaryStage, field.width*cellSize, field.height * cellSize);
+        setUpStage(primaryStage, field.width * cellSize, field.height * cellSize);
         scheduleGameTimer();
     }
 
-    private void setUpStage(Stage primaryStage, int width, int height){
+    private void initControllers() {
+        controllers = new KeyboardPlayerController[playersCount];
+        for (int i = 0; i < playersCount; i++)
+            controllers[i] = new KeyboardPlayerController(game.players[i]);
+        controllers[0].setKeyMap(adwsKeyMap);
+        controllers[1].setKeyMap(arrowsKeyMap);
+    }
+
+    private void setUpStage(Stage primaryStage, int width, int height) {
         Group root = new Group();
         Canvas canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(event -> {
-            if (keyMap.containsKey(event.getCode())){
-                Pair<Integer, Direction> pair = keyMap.get(event.getCode());
-                game.setSnakeDirection(pair.getKey(),  pair.getValue());
-            }
+            for(KeyboardPlayerController controller: controllers)
+                controller.handleKey(event.getCode());
         });
         primaryStage.setTitle("Змейка");
         primaryStage.setScene(scene);
@@ -75,35 +90,35 @@ public class Main extends Application {
         launch(args);
     }
 
-    private void scheduleGameTimer(){
+    private void scheduleGameTimer() {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 game.tick();
                 Platform.runLater(() -> repaint());
-                if (game.getState() == GameState.Loss)
+                if (game.getState() == GameState.Finished)
                     timer.cancel();
             }
         }, 0, tickTime);
     }
 
-    private void repaint(){
+    private void repaint() {
         Canvas canvas = gc.getCanvas();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        if (game.getState() == GameState.Loss){
+        if (game.getState() == GameState.Finished) {
             gc.setFill(Color.RED);
             gc.setFont(Font.font(40));
             gc.fillText("Game Over", 0, canvas.getHeight() / 2);
             return;
         }
 
-        for (Cell cell: game.getLevel()) {
+        for (Cell cell : game.getLevel()) {
             fillCell(cell.location.x, cell.location.y, cellColors.get(cell.getClass().getName()));
         }
     }
 
-    private void fillCell(int x, int y, Paint p){
+    private void fillCell(int x, int y, Paint p) {
         gc.setStroke(Color.BLACK);
         gc.setFill(p);
         gc.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
