@@ -2,14 +2,9 @@ package oop.snakegame;
 
 
 class SnakeBlock extends SolidCell {
-    public final int number;
-    SnakeBlock(Location location, int number) {
+    final Snake owner;
+    SnakeBlock(Location location, Snake owner) {
         super(location);
-        this.number = number;
+        this.owner = owner;
     }
-    SnakeBlock(Location location) {
-        super(location);
-        this.number = 0;
-    }
-
 }

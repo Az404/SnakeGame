@@ -59,20 +59,12 @@ class Snake implements Iterable<SnakeBlock> {
     private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
     private boolean death;
-    public final int number;
-    Snake(Location location, Direction headDirection, int number) {
-        this.nextHeadDirection = headDirection;
-        blocks = new LinkedList<>();
-        blocks.addFirst(new SnakeBlock(location, number));
-        death = false;
-        this.number = number;
-    }
+
     Snake(Location location, Direction headDirection) {
         this.nextHeadDirection = headDirection;
         blocks = new LinkedList<>();
-        blocks.addFirst(new SnakeBlock(location, 0));
+        blocks.addFirst(new SnakeBlock(location, this));
         death = false;
-        this.number = 0;
     }
 
     void destroy() {
@@ -98,7 +90,7 @@ class Snake implements Iterable<SnakeBlock> {
 
     private void appendHead() {
         synchronized (this) {
-            SnakeBlock newHead = new SnakeBlock(getHead().location.addOffset(nextHeadDirection.getOffset()), number);
+            SnakeBlock newHead = new SnakeBlock(getHead().location.addOffset(nextHeadDirection.getOffset()), this);
             blocks.addFirst(newHead);
             lastHeadDirection = nextHeadDirection;
         }

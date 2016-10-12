@@ -11,8 +11,8 @@ public class SnakeTest {
         snake.extend(1);
         snake.move();
         assertArrayEquals(new SnakeBlock[]{
-                new SnakeBlock(new Location(1, 0)),
-                new SnakeBlock(new Location(0, 0))
+                new SnakeBlock(new Location(1, 0), snake),
+                new SnakeBlock(new Location(0, 0), snake)
         }, snake.toArray());
     }
 
@@ -21,7 +21,7 @@ public class SnakeTest {
         Snake snake = new Snake(new Location(0, 0), Direction.Down);
         snake.move();
         assertArrayEquals(new SnakeBlock[]{
-                new SnakeBlock(new Location(0, 1))
+                new SnakeBlock(new Location(0, 1), snake)
         }, snake.toArray());
     }
 

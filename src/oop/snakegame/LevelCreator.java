@@ -39,7 +39,7 @@ class LevelCreator {
                     continue;
                 }
 
-                Snake snake = createSnake(location, currentCell, snakes.size());
+                Snake snake = createSnake(location, currentCell);
                 if (snake != null)
                     snakes.add(snake);
             }
@@ -59,12 +59,12 @@ class LevelCreator {
             return null;
     }
 
-    private static Snake createSnake(Location location, char c, int number) {
+    private static Snake createSnake(Location location, char c) {
         Direction direction = Direction.fromChar(c);
         if (direction == null)
             return null;
         else
-            return new Snake(location, direction, number);
+            return new Snake(location, direction);
     }
 
 }

@@ -1,5 +1,6 @@
 package oop.snakegame;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,7 +19,7 @@ class Level implements Iterable<Cell> {
     }
 
     void handleTick() throws GameException {
-        for (Snake snake : snakes) {
+        for (Snake snake : Arrays.stream(snakes).filter(s -> !s.isDead()).collect(Collectors.toList())) {
             snake.move();
             if (!field.isCorrectLocation(snake.getHead().location)) {
                 snake.destroy();
@@ -48,7 +49,7 @@ class Level implements Iterable<Cell> {
     Stream<Cell> stream(){
         return Stream.concat(
                 Stream.of(field.stream()),
-                Arrays.stream(snakes).map(Snake::stream)
+                Arrays.stream(snakes).filter(snake -> !snake.isDead()).map(Snake::stream)
         ).reduce(Stream::concat).orElseGet(Stream::empty).map(cell -> (Cell)cell);
     }
 
