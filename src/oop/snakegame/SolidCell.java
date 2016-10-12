@@ -1,6 +1,6 @@
 package oop.snakegame;
 
-class SolidCell extends Cell {
+abstract class SolidCell extends Cell {
     SolidCell(Location location) {
         super(location);
     }

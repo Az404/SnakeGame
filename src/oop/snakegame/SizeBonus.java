@@ -24,4 +24,9 @@ class SizeBonus extends Bonus {
         int increment = level.random.nextInt(4) + 1;
         level.field.addCell(new SizeBonus(freeLocations.get(index), increment));
     }
+
+    @Override
+    void visit(IVisitor visitor) {
+        visitor.visit(this);
+    }
 }

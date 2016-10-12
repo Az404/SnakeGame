@@ -20,7 +20,6 @@ public class Main extends Application {
 
     private final static int tickTime = 500;
     private final static String levelFileName = "level.txt";
-    private final static int cellSize = 15;
     private final static HashMap<KeyCode, Direction> arrowsKeyMap = new HashMap<KeyCode, Direction>() {
         {
             put(KeyCode.LEFT, Direction.Left);
@@ -39,18 +38,13 @@ public class Main extends Application {
         }
     };
 
-    private final static HashMap<String, Color> cellColors = new HashMap<String, Color>() {{
-        put(Wall.class.getName(), Color.GRAY);
-        put(SnakeBlock.class.getName(), Color.BLUE);
-        put(SizeBonus.class.getName(), Color.GREEN);
-    }};
-
     private final static int playersCount = 2;
 
     private Game game;
     private GraphicsContext gc;
     private Timer timer = new Timer();
     private KeyboardPlayerController[] controllers;
+    private Painter painter;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -58,7 +52,7 @@ public class Main extends Application {
         initControllers();
         game.loadLevel(LevelCreator.create(levelFileName));
         Field field = game.getLevel().field;
-        setUpStage(primaryStage, field.width * cellSize, field.height * cellSize);
+        setUpStage(primaryStage, field.width * Painter.cellSize, field.height * Painter.cellSize);
         scheduleGameTimer();
     }
 
@@ -74,6 +68,7 @@ public class Main extends Application {
         Group root = new Group();
         Canvas canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
+        painter = new Painter(gc);
         root.getChildren().add(canvas);
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(event -> {
@@ -114,14 +109,7 @@ public class Main extends Application {
         }
 
         for (Cell cell : game.getLevel()) {
-            fillCell(cell.location.x, cell.location.y, cellColors.get(cell.getClass().getName()));
+            cell.visit(painter);
         }
-    }
-
-    private void fillCell(int x, int y, Paint p) {
-        gc.setStroke(Color.BLACK);
-        gc.setFill(p);
-        gc.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
-        gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
 }

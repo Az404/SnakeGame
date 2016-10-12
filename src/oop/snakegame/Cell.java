@@ -24,4 +24,6 @@ abstract class Cell {
     }
 
     abstract void interactWithSnake(Snake snake, Level level) throws GameException;
+
+    abstract void visit(IVisitor visitor);
 }

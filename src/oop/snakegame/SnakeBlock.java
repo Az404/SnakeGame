@@ -7,4 +7,9 @@ class SnakeBlock extends SolidCell {
         super(location);
         this.owner = owner;
     }
+
+    @Override
+    void visit(IVisitor visitor) {
+        visitor.visit(this);
+    }
 }
