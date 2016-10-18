@@ -2,7 +2,6 @@ package oop.snakegame;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 enum Direction {
@@ -59,11 +58,13 @@ class Snake implements Iterable<SnakeBlock> {
     private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
     private boolean death;
+    public final int id;
 
-    Snake(Location location, Direction headDirection) {
+    Snake(Location location, Direction headDirection, int id) {
+        this.id = id;
         this.nextHeadDirection = headDirection;
         blocks = new LinkedList<>();
-        blocks.addFirst(new SnakeBlock(location, this));
+        blocks.addFirst(new SnakeBlock(location, id));
         death = false;
     }
 
@@ -90,7 +91,7 @@ class Snake implements Iterable<SnakeBlock> {
 
     private void appendHead() {
         synchronized (this) {
-            SnakeBlock newHead = new SnakeBlock(getHead().location.addOffset(nextHeadDirection.getOffset()), this);
+            SnakeBlock newHead = new SnakeBlock(getHead().location.addOffset(nextHeadDirection.getOffset()), id);
             blocks.addFirst(newHead);
             lastHeadDirection = nextHeadDirection;
         }

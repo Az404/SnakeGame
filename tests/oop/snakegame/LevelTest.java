@@ -75,8 +75,8 @@ public class LevelTest {
         assertEquals(1, level.snakes[0].getLength());
         level.handleTick();
         assertArrayEquals(new SnakeBlock[]{
-            new SnakeBlock(new Location(1, 3), level.snakes[0]),
-            new SnakeBlock(new Location(1, 2), level.snakes[0])
+            new SnakeBlock(new Location(1, 3),  0),
+            new SnakeBlock(new Location(1, 2), 0)
         }, level.snakes[0].toArray());
     }
 }

@@ -20,6 +20,14 @@ class LevelCreator {
         return create(Files.readAllLines(Paths.get(filename)).toArray(new String[0]));
     }
 
+    private static int nextId = 0;
+
+    private static int getId() {
+        nextId++;
+        return nextId;
+    }
+
+
     static Level create(String[] cellMap) throws ParseException {
         Field field = new Field(cellMap[0].length(), cellMap.length);
         List<Snake> snakes = new ArrayList<>();
@@ -64,7 +72,7 @@ class LevelCreator {
         if (direction == null)
             return null;
         else
-            return new Snake(location, direction);
+            return new Snake(location, direction, getId());
     }
 
 }

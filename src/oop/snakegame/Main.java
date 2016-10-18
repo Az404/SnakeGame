@@ -1,5 +1,6 @@
 package oop.snakegame;
 
+import com.sun.media.sound.DirectAudioDeviceProvider;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -12,14 +13,17 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Main extends Application {
 
     private final static int tickTime = 500;
     private final static String levelFileName = "level.txt";
+    private final static List<Paint> colors = new ArrayList<Paint>() {{
+        add(Color.BLUE);
+        add(Color.RED);
+        add(Color.YELLOW);
+    }};
     private final static HashMap<KeyCode, Direction> arrowsKeyMap = new HashMap<KeyCode, Direction>() {
         {
             put(KeyCode.LEFT, Direction.Left);
@@ -38,7 +42,25 @@ public class Main extends Application {
         }
     };
 
+    private final static HashMap<KeyCode, Direction> jlikKeyMap = new HashMap<KeyCode, Direction>() {
+        {
+            put(KeyCode.J, Direction.Left);
+            put(KeyCode.L, Direction.Right);
+            put(KeyCode.I, Direction.Up);
+            put(KeyCode.K, Direction.Down);
+        }
+    };
+
+    private final static List<HashMap<KeyCode, Direction>> collectionKeyMap = new ArrayList<HashMap<KeyCode, Direction>>() {{
+        add(arrowsKeyMap);
+        add(adwsKeyMap);
+        add(jlikKeyMap);
+    }};
+
     private final static int playersCount = 2;
+    private int getMaxCountPlayers() {
+        return collectionKeyMap.size();
+    }
 
     private Game game;
     private GraphicsContext gc;
@@ -58,17 +80,23 @@ public class Main extends Application {
 
     private void initControllers() {
         controllers = new KeyboardPlayerController[playersCount];
-        for (int i = 0; i < playersCount; i++)
+        for (int i = 0; i < playersCount; i++) {
             controllers[i] = new KeyboardPlayerController(game.players[i]);
-        controllers[0].setKeyMap(adwsKeyMap);
-        controllers[1].setKeyMap(arrowsKeyMap);
+            controllers[i].setKeyMap(collectionKeyMap.get(i));
+        }
     }
 
     private void setUpStage(Stage primaryStage, int width, int height) {
         Group root = new Group();
         Canvas canvas = new Canvas(width, height);
+        HashMap<Integer, Paint> idToColor = new HashMap<>();
+        Snake[] snakes =  game.getLevel().snakes;
+        for (int i = 0; i < snakes.length; i++) {
+            idToColor.put(snakes[i].id, colors.get(i));
+        }
+
         gc = canvas.getGraphicsContext2D();
-        painter = new Painter(gc);
+        painter = new Painter(gc, idToColor);
         root.getChildren().add(canvas);
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(event -> {

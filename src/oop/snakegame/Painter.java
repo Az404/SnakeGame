@@ -4,13 +4,18 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.util.HashMap;
+
 class Painter implements IVisitor {
 
     final static int cellSize = 15;
+    private final HashMap<Integer, Paint> idToColor;
     private GraphicsContext gc;
 
-    Painter(GraphicsContext gc){
+    Painter(GraphicsContext gc, HashMap<Integer, Paint> idToColor){
         this.gc = gc;
+        this.idToColor = idToColor;
+
     }
 
     @Override
@@ -25,7 +30,7 @@ class Painter implements IVisitor {
 
     @Override
     public void visit(SnakeBlock snakeBlock){
-        fillCell(snakeBlock.location, Color.BLUE);
+        fillCell(snakeBlock.location, idToColor.get(snakeBlock.id));
     }
 
     private void fillCell(Location location, Paint p) {
