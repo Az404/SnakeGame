@@ -11,6 +11,7 @@ class Game {
     private Level level;
     private GameState state = GameState.Active;
     final Player[] players;
+    private PlayerController[] controllers;
 
     Game(int playersCount){
         players = new Player[playersCount];
@@ -19,6 +20,9 @@ class Game {
     }
 
     void tick() {
+        for (PlayerController controller: controllers){
+            controller.controlPlayer();
+        }
         try {
             level.handleTick();
         } catch (GameException e){
@@ -46,4 +50,7 @@ class Game {
         return level;
     }
 
+    void setControllers(PlayerController[] controllers) {
+        this.controllers = controllers;
+    }
 }

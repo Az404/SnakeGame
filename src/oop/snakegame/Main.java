@@ -1,19 +1,21 @@
 package oop.snakegame;
 
-import com.sun.media.sound.DirectAudioDeviceProvider;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.*;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -24,21 +26,28 @@ public class Main extends Application {
         add(Color.RED);
         add(Color.YELLOW);
     }};
-    private final static HashMap<KeyCode, Direction> arrowsKeyMap = new HashMap<KeyCode, Direction>() {
+
+    private static PlayerAction getSetDirectionAction(Direction direction){
+        return (ctrl) -> ctrl.setSnakeDirection(direction);
+    }
+
+    private final static HashMap<KeyCode, PlayerAction> arrowsKeyMap = new HashMap<KeyCode, PlayerAction>() {
         {
-            put(KeyCode.LEFT, Direction.Left);
-            put(KeyCode.RIGHT, Direction.Right);
-            put(KeyCode.UP, Direction.Up);
-            put(KeyCode.DOWN, Direction.Down);
+            put(KeyCode.LEFT, getSetDirectionAction(Direction.Left));
+            put(KeyCode.RIGHT, getSetDirectionAction(Direction.Right));
+            put(KeyCode.UP, getSetDirectionAction(Direction.Up));
+            put(KeyCode.DOWN, getSetDirectionAction(Direction.Down));
+            put(KeyCode.ENTER, PlayerController::rotate);
         }
     };
 
-    private final static HashMap<KeyCode, Direction> adwsKeyMap = new HashMap<KeyCode, Direction>() {
+    private final static HashMap<KeyCode, PlayerAction> adwsKeyMap = new HashMap<KeyCode, PlayerAction>() {
         {
-            put(KeyCode.A, Direction.Left);
-            put(KeyCode.D, Direction.Right);
-            put(KeyCode.W, Direction.Up);
-            put(KeyCode.S, Direction.Down);
+            put(KeyCode.A, getSetDirectionAction(Direction.Left));
+            put(KeyCode.D, getSetDirectionAction(Direction.Right));
+            put(KeyCode.W, getSetDirectionAction(Direction.Up));
+            put(KeyCode.S, getSetDirectionAction(Direction.Down));
+            put(KeyCode.Q, PlayerController::rotate);
         }
     };
 
@@ -51,10 +60,10 @@ public class Main extends Application {
         }
     };
 
-    private final static List<HashMap<KeyCode, Direction>> collectionKeyMap = new ArrayList<HashMap<KeyCode, Direction>>() {{
+    private final static List<HashMap<KeyCode, PlayerAction>> collectionKeyMap = new ArrayList<HashMap<KeyCode, PlayerAction>>() {{
         add(arrowsKeyMap);
         add(adwsKeyMap);
-        add(jlikKeyMap);
+        //add(jlikKeyMap);
     }};
 
     private final static int playersCount = 2;
@@ -65,49 +74,59 @@ public class Main extends Application {
     private Game game;
     private GraphicsContext gc;
     private Timer timer = new Timer();
-    private KeyboardPlayerController[] controllers;
+    private PlayerController[] controllers;
     private Painter painter;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         game = new Game(playersCount);
-        initControllers();
+        controllers = createControllers(game.players);
+        game.setControllers(controllers);
         game.loadLevel(LevelCreator.create(levelFileName));
         Field field = game.getLevel().field;
         setUpStage(primaryStage, field.width * Painter.cellSize, field.height * Painter.cellSize);
         scheduleGameTimer();
     }
 
-    private void initControllers() {
-        controllers = new KeyboardPlayerController[playersCount];
+    private PlayerController[] createControllers(Player[] players) {
+        PlayerController[] controllers = new PlayerController[playersCount];
         for (int i = 0; i < playersCount; i++) {
-            controllers[i] = new KeyboardPlayerController(game.players[i]);
-            controllers[i].setKeyMap(collectionKeyMap.get(i));
+            KeyboardPlayerController controller = new KeyboardPlayerController(players[i]);
+            controller.setKeyMap(collectionKeyMap.get(i));
+            controllers[i] = controller;
         }
+        return controllers;
     }
 
     private void setUpStage(Stage primaryStage, int width, int height) {
         Group root = new Group();
         Canvas canvas = new Canvas(width, height);
-        HashMap<Integer, Paint> idToColor = new HashMap<>();
-        Snake[] snakes =  game.getLevel().snakes;
-        for (int i = 0; i < snakes.length; i++) {
-            idToColor.put(snakes[i].id, colors.get(i));
-        }
-
-        gc = canvas.getGraphicsContext2D();
-        painter = new Painter(gc, idToColor);
         root.getChildren().add(canvas);
+        gc = canvas.getGraphicsContext2D();
+        painter = new Painter(gc, createSnakeIdToColorMap());
         Scene scene = new Scene(root);
-        scene.setOnKeyPressed(event -> {
-            for(KeyboardPlayerController controller: controllers)
-                controller.handleKey(event.getCode());
-        });
+        addKeyboardHandlers(scene);
         primaryStage.setTitle("Змейка");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
+    private void addKeyboardHandlers(Scene scene) {
+        for(PlayerController controller: controllers)
+            if (controller instanceof EventHandler<?>)
+                try {
+                    scene.setOnKeyPressed((EventHandler<? super KeyEvent>) controller);
+                } catch (ClassCastException ignored) {}
+    }
+
+    private HashMap<Integer, Paint> createSnakeIdToColorMap() {
+        HashMap<Integer, Paint> idToColor = new HashMap<>();
+        Snake[] snakes =  game.getLevel().snakes;
+        for (int i = 0; i < snakes.length; i++) {
+            idToColor.put(snakes[i].id, colors.get(i));
+        }
+        return idToColor;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -137,7 +156,7 @@ public class Main extends Application {
         }
 
         for (Cell cell : game.getLevel()) {
-            cell.visit(painter);
+            cell.accept(painter);
         }
     }
 }

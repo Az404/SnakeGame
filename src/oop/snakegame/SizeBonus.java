@@ -26,7 +26,7 @@ class SizeBonus extends Bonus {
     }
 
     @Override
-    void visit(IVisitor visitor) {
+    void accept(IVisitor visitor) {
         visitor.visit(this);
     }
 }

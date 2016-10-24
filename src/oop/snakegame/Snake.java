@@ -1,5 +1,7 @@
 package oop.snakegame;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Stream;
@@ -52,13 +54,13 @@ enum Direction {
     }
 }
 
-class Snake implements Iterable<SnakeBlock> {
+class Snake implements Iterable<SnakeBlock>, IControllableSnake {
     private Direction lastHeadDirection;
     private Direction nextHeadDirection;
     private LinkedList<SnakeBlock> blocks;
     private int extensionCount;
     private boolean death;
-    public final int id;
+    final int id;
 
     Snake(Location location, Direction headDirection, int id) {
         this.id = id;
@@ -105,7 +107,7 @@ class Snake implements Iterable<SnakeBlock> {
         return blocks.size();
     }
 
-    void setNextHeadDirection(Direction direction) {
+    public void setNextHeadDirection(Direction direction) {
         if (getLength() > 1 && direction == lastHeadDirection.opposite())
             return;
         synchronized (this){
@@ -133,5 +135,9 @@ class Snake implements Iterable<SnakeBlock> {
 
     SnakeBlock getHead() {
         return blocks.getFirst();
+    }
+
+    public void reverse(){
+        throw new NotImplementedException();
     }
 }

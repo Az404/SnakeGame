@@ -1,5 +1,6 @@
 package oop.snakegame;
 
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -19,7 +20,7 @@ public class LevelTest {
         assertEquals(new Location(2, 2), level.snakes[0].getHead().location);
     }
 
-    @Test(expected = CollisionException.class)
+    @Test
     public void testWallCollision() throws Throwable {
         String[] map = new String[]{
             "#####",
@@ -30,9 +31,10 @@ public class LevelTest {
         };
         Level level = LevelCreator.create(map);
         level.handleTick();
+        Assert.assertTrue(level.snakes[0].isDead());
     }
 
-    @Test(expected = CollisionException.class)
+    @Test
     public void testSelfCollision() throws Throwable {
         String[] map = new String[]{
                 "#####",
@@ -49,15 +51,17 @@ public class LevelTest {
             level.snakes[0].setNextHeadDirection(direction);
             level.handleTick();
         }
+        Assert.assertTrue(level.snakes[0].isDead());
     }
 
-    @Test(expected = CollisionException.class)
+    @Test
     public void testMapExit() throws Throwable {
         String[] map = new String[]{
                 " R"
         };
         Level level = LevelCreator.create(map);
         level.handleTick();
+        Assert.assertTrue(level.snakes[0].isDead());
     }
 
     @Test

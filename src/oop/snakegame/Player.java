@@ -8,7 +8,7 @@ class Player {
     private int score;
     private Snake snake;
 
-    Snake getSnake(){
+    IControllableSnake getSnake(){
         return snake;
     }
 
