@@ -4,11 +4,11 @@ enum PlayerState{
     Alive, Dead
 }
 
-class Player {
+public class Player {
     private int score;
     private Snake snake;
 
-    IControllableSnake getSnake(){
+    public IControllableSnake getSnake(){
         return snake;
     }
 

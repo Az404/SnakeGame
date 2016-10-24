@@ -1,4 +1,4 @@
-package oop.snakegame;
+package oop.snakegame.primitives;
 
 class Offset {
     final int x;

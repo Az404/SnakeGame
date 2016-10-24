@@ -1,60 +1,15 @@
 package oop.snakegame;
 
+import oop.snakegame.cells.SnakeBlock;
+import oop.snakegame.primitives.Direction;
+import oop.snakegame.primitives.Location;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
-enum Direction {
-    Up,
-    Right,
-    Down,
-    Left;
-
-    public Direction opposite() {
-        switch (this) {
-            case Down:
-                return Up;
-            case Left:
-                return Right;
-            case Right:
-                return Left;
-            default:
-                return Down;
-        }
-    }
-
-    public Offset getOffset() {
-        switch (this) {
-            case Down:
-                return new Offset(0, 1);
-            case Left:
-                return new Offset(-1, 0);
-            case Right:
-                return new Offset(1, 0);
-            default:
-                return new Offset(0, -1);
-        }
-    }
-
-    public static Direction fromChar(char c) {
-        switch (c) {
-            case 'L':
-                return Direction.Left;
-            case 'R':
-                return Direction.Right;
-            case 'U':
-                return Direction.Up;
-            case 'D':
-                return Direction.Down;
-            default:
-                return null;
-        }
-    }
-}
-
-class Snake implements Iterable<SnakeBlock>, IControllableSnake {
+public class Snake implements Iterable<SnakeBlock>, IControllableSnake {
     private Direction lastHeadDirection;
     private Direction nextHeadDirection;
     private LinkedList<SnakeBlock> blocks;
@@ -70,7 +25,7 @@ class Snake implements Iterable<SnakeBlock>, IControllableSnake {
         death = false;
     }
 
-    void destroy() {
+    public void destroy() {
         death = true;
     }
 
@@ -78,7 +33,7 @@ class Snake implements Iterable<SnakeBlock>, IControllableSnake {
         return death;
     }
 
-    void extend(int increment) {
+    public void extend(int increment) {
         extensionCount += increment;
     }
 

@@ -1,12 +1,15 @@
 package oop.snakegame;
 
+import oop.snakegame.cells.Cell;
+import oop.snakegame.primitives.Location;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-class Field implements Iterable<Cell> {
+public class Field implements Iterable<Cell> {
 
     private List<Cell> cells;
     final int width;
@@ -26,14 +29,14 @@ class Field implements Iterable<Cell> {
         return cells.stream();
     }
 
-    void addCell(Cell cell) {
+    public void addCell(Cell cell) {
         if (isCorrectLocation(cell.location))
             cells.add(cell);
         else
             throw new InvalidParameterException("location is not on the field");
     }
 
-    void removeCell(Cell cell) {
+    public void removeCell(Cell cell) {
         cells.remove(cell);
     }
 

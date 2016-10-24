@@ -1,5 +1,8 @@
 package oop.snakegame;
 
+import oop.snakegame.cells.SnakeBlock;
+import oop.snakegame.primitives.Direction;
+import oop.snakegame.primitives.Location;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;

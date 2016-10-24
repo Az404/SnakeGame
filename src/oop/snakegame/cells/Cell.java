@@ -1,6 +1,9 @@
-package oop.snakegame;
+package oop.snakegame.cells;
 
-abstract class Cell {
+import oop.snakegame.*;
+import oop.snakegame.primitives.Location;
+
+public abstract class Cell {
     public final Location location;
 
     Cell(Location location) {
@@ -23,7 +26,7 @@ abstract class Cell {
         return location != null ? location.hashCode() : 0;
     }
 
-    abstract void interactWithSnake(Snake snake, Level level) throws GameException;
+    public abstract void interactWithSnake(Snake snake, Level level) throws GameException;
 
-    abstract void accept(IVisitor visitor);
+    public abstract void accept(IVisitor visitor);
 }

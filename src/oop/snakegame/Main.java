@@ -13,6 +13,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import oop.snakegame.cells.Cell;
+import oop.snakegame.playercontrollers.*;
+import oop.snakegame.primitives.Direction;
 
 import java.util.*;
 import java.util.List;

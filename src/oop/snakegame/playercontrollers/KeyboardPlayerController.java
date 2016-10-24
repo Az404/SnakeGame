@@ -1,20 +1,22 @@
-package oop.snakegame;
+package oop.snakegame.playercontrollers;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import oop.snakegame.Player;
+import oop.snakegame.PlayerAction;
 
 import java.util.HashMap;
 
-class KeyboardPlayerController extends PlayerController implements EventHandler<KeyEvent> {
+public class KeyboardPlayerController extends PlayerController implements EventHandler<KeyEvent> {
 
     private HashMap<KeyCode, PlayerAction> keyMap = new HashMap<>();
 
-    KeyboardPlayerController(Player player) {
+    public KeyboardPlayerController(Player player) {
         super(player);
     }
 
-    void setKeyMap(HashMap<KeyCode, PlayerAction> keyMap){
+    public void setKeyMap(HashMap<KeyCode, PlayerAction> keyMap){
         this.keyMap = keyMap;
     }
 

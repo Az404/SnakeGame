@@ -1,16 +1,18 @@
 package oop.snakegame;
 
-import java.lang.reflect.Array;
+import oop.snakegame.cells.Cell;
+import oop.snakegame.primitives.Location;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class Level implements Iterable<Cell> {
+public class Level implements Iterable<Cell> {
 
-    final Field field;
+    public final Field field;
     final Snake[] snakes;
 
-    final Random random;
+    public final Random random;
 
     Level(Field field, Snake[] snakes) {
         this.field = field;
@@ -35,7 +37,7 @@ class Level implements Iterable<Cell> {
         return stream().filter(cell -> cell.location.equals(location)).collect(Collectors.toList());
     }
 
-    List<Location> getFreeLocations() {
+    public List<Location> getFreeLocations() {
         HashSet<Location> result = new HashSet<>();
         for (int x = 0; x < field.width; x++)
             for (int y = 0; y < field.height; y++)

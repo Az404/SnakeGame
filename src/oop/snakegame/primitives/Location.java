@@ -1,13 +1,13 @@
-package oop.snakegame;
+package oop.snakegame.primitives;
 
-class Location {
-    final int x;
-    final int y;
-    Location(int x, int y) {
+public class Location {
+    public final int x;
+    public final int y;
+    public Location(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    Location addOffset(Offset offset) {
+    public Location addOffset(Offset offset) {
         return new Location(x + offset.x, y + offset.y);
     }
 

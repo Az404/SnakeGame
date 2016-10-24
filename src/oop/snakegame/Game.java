@@ -1,5 +1,7 @@
 package oop.snakegame;
 
+import oop.snakegame.playercontrollers.PlayerController;
+
 import java.util.Arrays;
 
 enum GameState{

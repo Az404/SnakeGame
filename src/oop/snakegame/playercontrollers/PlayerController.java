@@ -1,8 +1,10 @@
-package oop.snakegame;
+package oop.snakegame.playercontrollers;
 
+import oop.snakegame.primitives.Direction;
+import oop.snakegame.Player;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-abstract class PlayerController {
+public abstract class PlayerController {
     private Player player;
 
     private Direction snakeDirection;
@@ -11,14 +13,14 @@ abstract class PlayerController {
         this.player = player;
     }
 
-    void controlPlayer(){
+    public void controlPlayer(){
         if (snakeDirection != null) {
             player.getSnake().setNextHeadDirection(snakeDirection);
             snakeDirection = null;
         }
     }
 
-    void setSnakeDirection(Direction direction){
+    public void setSnakeDirection(Direction direction){
         snakeDirection = direction;
     }
 
