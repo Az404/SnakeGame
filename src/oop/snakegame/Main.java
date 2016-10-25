@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import oop.snakegame.cells.Cell;
 import oop.snakegame.playercontrollers.*;
 import oop.snakegame.primitives.Direction;
-
 import java.util.*;
 import java.util.List;
 
@@ -33,8 +32,6 @@ public class Main extends Application {
     private static PlayerAction getSetDirectionAction(Direction direction){
         return (ctrl) -> ctrl.setSnakeDirection(direction);
     }
-
-
 
     private final static HashMap<KeyCode, PlayerAction> arrowsKeyMap = new HashMap<KeyCode, PlayerAction>() {
         {
@@ -72,7 +69,7 @@ public class Main extends Application {
         add(jlikKeyMap);
     }};
 
-    private final static int playersCount = 2;
+    private final static int playersCount = 3;
     private int getMaxCountPlayers() {
         return collectionKeyMap.size();
     }
@@ -121,12 +118,9 @@ public class Main extends Application {
         for(PlayerController controller: controllers)  {
             if (controller instanceof EventHandler<?>)
                 try {
-                    scene.setOnKeyPressed((EventHandler<? super KeyEvent>) controller);
+                    scene.addEventHandler(KeyEvent.KEY_PRESSED, (EventHandler<? super KeyEvent>) controller);
                 } catch (ClassCastException ignored) {}
         }
-
-
-
     }
 
     private HashMap<Integer, Paint> createSnakeIdToColorMap() {
@@ -157,14 +151,12 @@ public class Main extends Application {
     private void repaint() {
         Canvas canvas = gc.getCanvas();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         if (game.getState() == GameState.Finished) {
             gc.setFill(Color.RED);
             gc.setFont(Font.font(40));
             gc.fillText("Game Over", 0, canvas.getHeight() / 2);
             return;
         }
-
         for (Cell cell : game.getLevel()) {
             cell.accept(painter);
         }
