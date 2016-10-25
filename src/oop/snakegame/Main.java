@@ -122,10 +122,7 @@ public class Main extends Application {
             if (controller instanceof EventHandler<?>)
                 try {
                     scene.setOnKeyPressed((EventHandler<? super KeyEvent>) controller);
-                } catch (ClassCastException ignored) {
-                    int t = 3;
-                }
-            int r = 1;
+                } catch (ClassCastException ignored) {}
         }
 
 
