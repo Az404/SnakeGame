@@ -22,7 +22,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    private final static int tickTime = 500;
+    private final static int tickTime = 300;
     private final static String levelFileName = "level.txt";
     private final static List<Paint> colors = new ArrayList<Paint>() {{
         add(Color.BLUE);
@@ -34,13 +34,15 @@ public class Main extends Application {
         return (ctrl) -> ctrl.setSnakeDirection(direction);
     }
 
+
+
     private final static HashMap<KeyCode, PlayerAction> arrowsKeyMap = new HashMap<KeyCode, PlayerAction>() {
         {
             put(KeyCode.LEFT, getSetDirectionAction(Direction.Left));
             put(KeyCode.RIGHT, getSetDirectionAction(Direction.Right));
             put(KeyCode.UP, getSetDirectionAction(Direction.Up));
             put(KeyCode.DOWN, getSetDirectionAction(Direction.Down));
-            put(KeyCode.ENTER, PlayerController::rotate);
+            put(KeyCode.ENTER, PlayerController::reverseSnake);
         }
     };
 
@@ -50,23 +52,24 @@ public class Main extends Application {
             put(KeyCode.D, getSetDirectionAction(Direction.Right));
             put(KeyCode.W, getSetDirectionAction(Direction.Up));
             put(KeyCode.S, getSetDirectionAction(Direction.Down));
-            put(KeyCode.Q, PlayerController::rotate);
+            put(KeyCode.Q, PlayerController::reverseSnake);
         }
     };
 
-    private final static HashMap<KeyCode, Direction> jlikKeyMap = new HashMap<KeyCode, Direction>() {
+    private final static HashMap<KeyCode, PlayerAction> jlikKeyMap = new HashMap<KeyCode, PlayerAction>() {
         {
-            put(KeyCode.J, Direction.Left);
-            put(KeyCode.L, Direction.Right);
-            put(KeyCode.I, Direction.Up);
-            put(KeyCode.K, Direction.Down);
+            put(KeyCode.J, getSetDirectionAction(Direction.Left));
+            put(KeyCode.L, getSetDirectionAction(Direction.Right));
+            put(KeyCode.I, getSetDirectionAction(Direction.Up));
+            put(KeyCode.K, getSetDirectionAction(Direction.Down));
+            put(KeyCode.U, PlayerController::reverseSnake);
         }
     };
 
     private final static List<HashMap<KeyCode, PlayerAction>> collectionKeyMap = new ArrayList<HashMap<KeyCode, PlayerAction>>() {{
-        add(arrowsKeyMap);
         add(adwsKeyMap);
-        //add(jlikKeyMap);
+        add(arrowsKeyMap);
+        add(jlikKeyMap);
     }};
 
     private final static int playersCount = 2;
@@ -115,11 +118,18 @@ public class Main extends Application {
     }
 
     private void addKeyboardHandlers(Scene scene) {
-        for(PlayerController controller: controllers)
+        for(PlayerController controller: controllers)  {
             if (controller instanceof EventHandler<?>)
                 try {
                     scene.setOnKeyPressed((EventHandler<? super KeyEvent>) controller);
-                } catch (ClassCastException ignored) {}
+                } catch (ClassCastException ignored) {
+                    int t = 3;
+                }
+            int r = 1;
+        }
+
+
+
     }
 
     private HashMap<Integer, Paint> createSnakeIdToColorMap() {

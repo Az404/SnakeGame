@@ -3,8 +3,9 @@ package oop.snakegame;
 import oop.snakegame.cells.SnakeBlock;
 import oop.snakegame.primitives.Direction;
 import oop.snakegame.primitives.Location;
+import oop.snakegame.primitives.Offset;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.stream.Stream;
@@ -93,6 +94,16 @@ public class Snake implements Iterable<SnakeBlock>, IControllableSnake {
     }
 
     public void reverse(){
-        throw new NotImplementedException();
+        Collections.reverse(blocks);
+        if (blocks.size() > 1) {
+            SnakeBlock firstBlock = blocks.get(0);
+            SnakeBlock secondBlock = blocks.get(1);
+            Offset offset = secondBlock.location.getOffset(firstBlock.location);
+            nextHeadDirection = Direction.fromOffset(offset);
+        } else {
+            nextHeadDirection = nextHeadDirection.opposite();
+
+        }
+        lastHeadDirection = nextHeadDirection;
     }
 }

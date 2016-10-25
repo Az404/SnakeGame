@@ -11,6 +11,10 @@ public class Location {
         return new Location(x + offset.x, y + offset.y);
     }
 
+    public Offset getOffset(Location newLocation) {
+        return new Offset(newLocation.x - x, newLocation.y - y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

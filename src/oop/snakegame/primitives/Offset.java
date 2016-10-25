@@ -1,6 +1,6 @@
 package oop.snakegame.primitives;
 
-class Offset {
+public class Offset {
     final int x;
     final int y;
     Offset(int x, int y) {
