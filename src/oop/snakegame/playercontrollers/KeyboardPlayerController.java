@@ -24,6 +24,6 @@ public class KeyboardPlayerController extends PlayerController implements EventH
     public void handle(KeyEvent event) {
         KeyCode key = event.getCode();
         if (keyMap.containsKey(key))
-            keyMap.get(key).action(this);
+            actions.add(keyMap.get(key));
     }
 }

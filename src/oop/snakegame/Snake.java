@@ -102,7 +102,6 @@ public class Snake implements Iterable<SnakeBlock>, IControllableSnake {
             nextHeadDirection = Direction.fromOffset(offset);
         } else {
             nextHeadDirection = nextHeadDirection.opposite();
-
         }
         lastHeadDirection = nextHeadDirection;
     }

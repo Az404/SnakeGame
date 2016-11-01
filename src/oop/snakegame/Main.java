@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    private final static int tickTime = 300;
+    private final static int tickTime = 500;
     private final static String levelFileName = "level.txt";
     private final static List<Paint> colors = new ArrayList<Paint>() {{
         add(Color.BLUE);
@@ -30,8 +30,10 @@ public class Main extends Application {
     }};
 
     private static PlayerAction getSetDirectionAction(Direction direction){
-        return (ctrl) -> ctrl.setSnakeDirection(direction);
+        return (player) -> player.getSnake().setNextHeadDirection(direction);
     }
+
+    private static final PlayerAction reverseAction = (player) -> player.getSnake().reverse();
 
     private final static HashMap<KeyCode, PlayerAction> arrowsKeyMap = new HashMap<KeyCode, PlayerAction>() {
         {
@@ -39,7 +41,7 @@ public class Main extends Application {
             put(KeyCode.RIGHT, getSetDirectionAction(Direction.Right));
             put(KeyCode.UP, getSetDirectionAction(Direction.Up));
             put(KeyCode.DOWN, getSetDirectionAction(Direction.Down));
-            put(KeyCode.ENTER, PlayerController::reverseSnake);
+            put(KeyCode.ENTER, reverseAction);
         }
     };
 
@@ -49,7 +51,7 @@ public class Main extends Application {
             put(KeyCode.D, getSetDirectionAction(Direction.Right));
             put(KeyCode.W, getSetDirectionAction(Direction.Up));
             put(KeyCode.S, getSetDirectionAction(Direction.Down));
-            put(KeyCode.Q, PlayerController::reverseSnake);
+            put(KeyCode.Q, reverseAction);
         }
     };
 
@@ -59,7 +61,7 @@ public class Main extends Application {
             put(KeyCode.L, getSetDirectionAction(Direction.Right));
             put(KeyCode.I, getSetDirectionAction(Direction.Up));
             put(KeyCode.K, getSetDirectionAction(Direction.Down));
-            put(KeyCode.U, PlayerController::reverseSnake);
+            put(KeyCode.U, reverseAction);
         }
     };
 
@@ -108,13 +110,13 @@ public class Main extends Application {
         gc = canvas.getGraphicsContext2D();
         painter = new Painter(gc, createSnakeIdToColorMap());
         Scene scene = new Scene(root);
-        addKeyboardHandlers(scene);
+        addKeyboardHandlers(scene, controllers);
         primaryStage.setTitle("Змейка");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void addKeyboardHandlers(Scene scene) {
+    private void addKeyboardHandlers(Scene scene, PlayerController[] controllers) {
         for(PlayerController controller: controllers)  {
             if (controller instanceof EventHandler<?>)
                 try {
