@@ -25,7 +25,7 @@ public class Main extends Application {
     private final static String levelFileName = "level.txt";
     private final static List<Paint> colors = new ArrayList<Paint>() {{
         add(Color.BLUE);
-        add(Color.RED);
+        add(Color.DARKRED);
         add(Color.YELLOW);
     }};
 
